@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <th:block th:replace="/layout/head :: head" />
+</head>
+<body>
+<div class="container">
+    <th:block th:replace="/layout/menu :: menu" />
+    <div class="content--cart">
+        <div class="content--cart--product">
+            <h3>Giỏ Hàng Của Tôi</h3>
+            <div class="content--cart--product--list">
+                <div class="content--cart--product--list--first">
+                    <div class="content--cart--product--list--first--left">
+                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
+                    </div>
+                    <div class="content--cart--product--list--first--center">
+                        <h5>Tôi Là Sản Phẩm</h5>
+                        <span>300.000đ</span>
+                    </div>
+                    <div class="content--cart--product--list--first--right">
+                        <span>300.000đ</span>
+                        <div class="quantity">
+                            <input type="number" min="1" max="9" step="1" value="1">
+                        </div>
+                    </div>
+                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </div>
+                <div class="content--cart--product--list--first">
+                    <div class="content--cart--product--list--first--left">
+                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
+                    </div>
+                    <div class="content--cart--product--list--first--center">
+                        <h5>Tôi Là Sản Phẩm</h5>
+                        <span>300.000đ</span>
+                    </div>
+                    <div class="content--cart--product--list--first--right">
+                        <span>300.000đ</span>
+                        <div class="quantity">
+                            <input type="number" min="1" max="9" step="1" value="1">
+                        </div>
+                    </div>
+                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </div>
+                <div class="content--cart--product--list--first">
+                    <div class="content--cart--product--list--first--left">
+                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
+                    </div>
+                    <div class="content--cart--product--list--first--center">
+                        <h5>Tôi Là Sản Phẩm</h5>
+                        <span>300.000đ</span>
+                    </div>
+                    <div class="content--cart--product--list--first--right">
+                        <span>300.000đ</span>
+                        <div class="quantity">
+                            <input type="number" min="1" max="9" step="1" value="1">
+                        </div>
+                    </div>
+                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </div>
+                <div class="content--cart--product--list--first">
+                    <div class="content--cart--product--list--first--left">
+                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
+                    </div>
+                    <div class="content--cart--product--list--first--center">
+                        <h5>Tôi Là Sản Phẩm</h5>
+                        <span>300.000đ</span>
+                    </div>
+                    <div class="content--cart--product--list--first--right">
+                        <span>300.000đ</span>
+                        <div class="quantity">
+                            <input type="number" min="1" max="9" step="1" value="1">
+                        </div>
+                    </div>
+                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="content--cart--money">
+            <div class="content--cart--money--top">
+                <h4>Tóm Tắt Đơn Hàng</h4>
+            </div>
+            <div class="content--cart--money--center">
+                <h4>Tổng Từng Phần : </h4>
+                <span>1.000.000đ</span>
+                <form action="" class="content--cart--money--center--form">
+                    <h4>Chọn Địa Chỉ Giao Hàng : </h4>
+                    <div class="content--cart--money--center--form--info">
+                        <label>Tỉnh / TP : </label>
+                        <select name="">
+                            <option value="">Thừa Thiên Huế</option>
+                            <option value="">Đà Nẵng</option>
+                            <option value="">Hồ Chí Minh</option>
+                        </select>
+                    </div>
+                    <div class="content--cart--money--center--form--info">
+                        <label >Huyện / Phường : </label>
+                        <select name="" >
+                            <option value="">Thừa Thiên Huế</option>
+                            <option value="">Đà Nẵng</option>
+                            <option value="">Hồ Chí Minh</option>
+                        </select>
+                    </div>
+                    <div class="content--cart--money--center--form--info">
+                        <label >Xã / Thị Trấn : </label>
+                        <select name="" >
+                            <option value="">Thừa Thiên Huế</option>
+                            <option value="">Đà Nẵng</option>
+                            <option value="">Hồ Chí Minh</option>
+                        </select>
+                    </div>
+                    <div class="content--cart--money--center--form--info">
+                        <label >Địa Chỉ : </label>
+                        <input type="text" placeholder="Địa Chỉ">
+                    </div>
+                </form>
+            </div>
+            <div class="content--cart--money--bottom">
+                <h4>Tổng : </h4>
+                <span>1.000.000đ</span>
+                <a href="#">Thanh Toán</a>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="/layout/introduce :: introduce" />
+    <th:block th:replace="/layout/footer :: footer" />
+</div>
+<th:block th:replace="/layout/cart_modal :: cart_modal" />
+<th:block th:replace="/layout/script :: script" />
+</body>
+</html>

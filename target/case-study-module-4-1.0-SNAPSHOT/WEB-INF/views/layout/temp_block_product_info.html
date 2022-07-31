@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="temp_block_product_info">
+
+    <textarea id="tempBlockProductInfo" class="hide">
+         <div class="show--info--product--content">
+            <div class="show--info--product--content--img">
+                <img src="assets/img/{0}" alt="">
+            </div>
+            <div class="show--info--product--content--product">
+                <div class="show--info--product--content--product--top">
+                    <h1 id="product--title">{1}</h1>
+                    <span id="product--price">{2} VNĐ</span>
+                    <span>Số Lượng :</span>
+                    <div class="quantity">
+                        <input type="number" min="1" max="9" step="1" value="1">
+                    </div>
+                </div>
+                <div class="show--info--product--content--product--bottom">
+                    <a href="javascript: void(0);">Thêm Vào Giỏ Hàng</a>
+                </div>
+            </div>
+            <a href="javascript: void(0);" id="btnClose"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+    </textarea>
+
+</th:block>

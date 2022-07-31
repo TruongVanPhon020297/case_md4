@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>RegistrationForm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link rel="stylesheet" href="assets/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <th:block th:replace="/layout/head :: head" />
+    <!-- STYLE CSS -->
+    <link rel="stylesheet" href="assets/css/style-register.css">
+</head>
+
+<body>
+
+<div class="wrapper" style="background-image: url('/assets/img/doughnuts-gbf58924a4_1920.jpg');">
+    <div class="inner">
+        <div class="image-holder">
+            <a href="Home.html" style="text-decoration: none;color: white;margin-bottom: 20px;display: inline-block;padding: 20px 40px;background: black;">Back To Home</a>
+            <img src="assets/img/bread-g352d7d629_1280.jpg" alt="" id="img-opacity">
+            <div class="modal-alert-danger hide"></div>
+        </div>
+        <form id="frmCreateUser">
+            <h3>Registration Form</h3>
+            <div class="form-wrapper">
+                <input type="text" id="email" name="email" placeholder="Email Address" class="form-control">
+                <i class="zmdi zmdi-email"></i>
+            </div>
+            <div class="form-wrapper">
+                <input type="text" id="fullName" name="fullName" placeholder="Full Name" class="form-control">
+            </div>
+            <div class="form-wrapper">
+                <input type="text" id="phone" name="phone" placeholder="Phone" class="form-control">
+            </div>
+            <div class="form-wrapper">
+                <select id="province" class="form-control">
+
+                </select>
+                <i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+            </div>
+            <div class="form-wrapper">
+                <select id="district"  class="form-control">
+
+                </select>
+                <i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+            </div>
+            <div class="form-wrapper">
+                <select id="ward"  class="form-control">
+
+                </select>
+                <i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+            </div>
+            <div class="form-wrapper">
+                <input type="text" id="address" name="address" placeholder="Address" class="form-control">
+            </div>
+            <div class="form-wrapper">
+                <input type="password" id="password" name="password" placeholder="Password" class="form-control">
+                <i class="zmdi zmdi-lock"></i>
+            </div>
+            <button id="btnRegister" type="button">Register
+                <i class="zmdi zmdi-arrow-right"></i>
+            </button>
+        </form>
+    </div>
+</div>
+<th:block th:replace="/layout/script :: script" />
+<script>
+
+    let user = new User();
+    let locationRegion = new LocationRegion();
+    let role = new Role();
+    let page = {
+        url : {
+            getAllProvince : "https://vapi.vnappmob.com/api/province/",
+            getAllDistrict : "https://vapi.vnappmob.com/api/province/district/",
+            getAllWard : "https://vapi.vnappmob.com/api/province/ward/",
+            saveUser : App.BASER_URL + "auth/register"
+        },
+        elements : {
+            locationRegion : {}
+        },
+        loadData : {},
+        commands : {},
+        dialogs : {
+            elements: {},
+            commands: {}
+        },
+        initializeControllEvents : {}
+    }
+    page.elements.fullName = $('#fullName');
+    page.elements.email = $('#email');
+    page.elements.address = $('#address');
+    page.elements.password = $('#password');
+    page.elements.phone = $('#phone');
+    page.elements.frmCreateUser = $('#frmCreateUser');
+    page.elements.showError = $('.modal-alert-danger');
+    page.elements.imgHidden = $('#img-opacity');
+    page.elements.btnRegister = $('#btnRegister');
+    page.elements.locationRegion.province = $('#province');
+    page.elements.locationRegion.district = $('#district');
+    page.elements.locationRegion.ward = $('#ward');
+
+    page.commands.drawProvinces = ()=> {
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url" : page.url.getAllProvince
+        })
+        .done((data) => {
+            if (data.results.length === 0) {
+                App.IziToast.showErrorAlert('Không Thể Tải Danh Sách Tỉnh - Thành Phố');
+            }
+            else {
+                $.each(data.results, (i, item) => {
+                    let str = `<option value="${item.province_id}">${item.province_name}</option>`;
+
+                    $('#province').prepend(str);
+                })
+            }
+        })
+    }
+
+    page.commands.drawDistricts = (provinceId)=>{
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url" : page.url.getAllDistrict+ provinceId
+        })
+        .done((data) => {
+            $('#district').html('');
+
+            if (data.results.length === 0) {
+                App.IziToast.showErrorAlert('Không Thể Tải Danh Sách Quận - Phường - Huyện');
+            }
+            else {
+                $.each(data.results, (i, item) => {
+                    let str = `<option value="${item.district_id}">${item.district_name}</option>`;
+
+                    $('#district').prepend(str);
+                })
+            }
+        });
+    }
+
+    page.commands.drawWards = (districtId) => {
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": page.url.getAllWard + districtId,
+        })
+        .done((data) => {
+            $('#ward').html('');
+            if (data.results.length === 0) {
+                App.IziToast.showErrorAlert('Không Thể Tải Danh Sách Xã - Thị Trấn');
+            }
+            else {
+                $.each(data.results, (i, item) => {
+                    let str = `<option value="${item.ward_id}">${item.ward_name}</option>`;
+
+                    $('#ward').prepend(str);
+                })
+            }
+        });
+    }
+
+    page.commands.drawProvinces().then(() => {
+        let provinceId = $('#province').val();
+        page.commands.drawDistricts(provinceId).then(() => {
+            let districtId = $('#district').val();
+            page.commands.drawWards(districtId);
+        });
+    });
+
+    page.commands.provinceChange = () => {
+        page.elements.locationRegion.province.on('change', () => {
+            let provinceId =  page.elements.locationRegion.province.val();
+
+            page.commands.drawDistricts(provinceId).then(() => {
+                let districtId = $('#district').val();
+                page.commands.drawWards(districtId);
+            });
+        });
+    }
+
+    page.commands.districtChange = () => {
+        page.elements.locationRegion.district.on('change', () => {
+            let districtId =  page.elements.locationRegion.district.val();
+            page.commands.drawWards(districtId);
+        });
+    }
+
+    page.commands.doCreateUser = () => {
+        locationRegion.provinceId = page.elements.locationRegion.province.val();
+        locationRegion.provinceName = $('#province :selected').text();
+        locationRegion.districtId = page.elements.locationRegion.district.val();
+        locationRegion.districtName = $('#district :selected').text();
+        locationRegion.wardId = page.elements.locationRegion.ward.val();
+        locationRegion.wardName = $('#ward :selected').text();
+        locationRegion.address = page.elements.address.val();
+
+        user.fullName = page.elements.fullName.val();
+        user.email = page.elements.email.val();
+        user.phone = page.elements.phone.val();
+        user.password = page.elements.password.val();
+        user.locationRegion = locationRegion;
+        user.role = role;
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url" : page.url.saveUser,
+            "data": JSON.stringify(user)
+        })
+        .done((data) => {
+            App.SweetAlert.showSuccessAlert("Tạo Tài Khoản Thành Công");
+        })
+        .fail((jqXHR) => {
+            page.elements.showError.html("");
+            if(jqXHR.responseJSON.message){
+                let msg = jqXHR.responseJSON.message;
+
+                let str = `<label class="error">${msg}</label>`;
+                page.elements.showError.removeClass("hide").addClass("show").append(str);
+
+            }else if(jqXHR.responseJSON){
+                $.each(jqXHR.responseJSON,(key,item) =>{
+                    let str = `<label class="error">${item}</label>`;
+                    page.elements.showError.removeClass("hide").addClass("show").append(str);
+                })
+            }
+        })
+    }
+
+    page.elements.btnRegister.on('click',function (){
+        page.elements.frmCreateUser.submit();
+    })
+
+    page.initializeControllEvents = () => {
+        page.commands.provinceChange();
+        page.commands.districtChange();
+    }
+
+    $(()=>{
+        page.initializeControllEvents()
+    })
+
+
+</script>
+</body>
+</html>

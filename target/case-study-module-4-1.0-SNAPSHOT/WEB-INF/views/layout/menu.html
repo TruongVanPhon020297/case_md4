@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="menu">
+    <div class="header">
+        <div class="header--left">
+            <h1><a href="/home">Bánh</a></h1>
+            <h4>Bánh Ngọt Nhiều Loại</h4>
+        </div>
+        <div class="header--center">
+            <ul class="header--center--ul">
+                <li><a href="#">Cửa Hàng</a></li>
+                <li><a href="#">Giới Thiệu</a></li>
+                <li><a href="#">Hỏi Đáp</a></li>
+                <li><a href="#">Liên Hệ</a></li>
+            </ul>
+        </div>
+        <div class="header--right">
+            <form action="" class="header--right--form">
+                <input type="text" class="header--right--form--search" placeholder="Tìm Kiếm">
+                <button><i class="fa fa-search" aria-hidden="true"></i></button>
+            </form>
+            <a href="/login">
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <span>Đăng Nhập</span>
+            </a>
+            <a href="javascript: void(0);" id="show_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</th:block>

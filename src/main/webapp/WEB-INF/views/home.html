@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <th:block th:replace="/layout/head :: head" />
+</head>
+<body>
+<div class="container">
+    <th:block th:replace="/layout/menu :: menu" />
+    <div class="content">
+
+    </div>
+    <th:block th:replace="/layout/introduce :: introduce" />
+    <th:block th:replace="/layout/footer :: footer" />
+</div>
+<th:block th:replace="/layout/temp_block_product :: temp_block_product" />
+<th:block th:replace="/layout/temp_block_product_info :: temp_block_product_info" />
+<th:block th:replace="/layout/cart_modal :: cart_modal" />
+<th:block th:replace="/layout/product_info :: product_info" />
+<th:block th:replace="/layout/script :: script" />
+<script>
+    let page = {
+        url : {
+            getAllProduct : App.BASER_URL + "products/"
+        },
+        elements : {
+            locationRegion : {}
+        },
+        loadData : {},
+        commands : {},
+        dialogs : {
+            elements: {},
+            commands: {}
+        },
+        initializeControllEvents : {}
+    }
+
+    page.dialogs.elements.modalProductInfo = $('.show--info--product');
+
+    let product = new Product();
+
+    let tempBlockProduct = $.validator.format($.trim($('#tempBlockProduct').val().toString()));
+
+    let tempBlockProductInfo = $.validator.format($.trim($('#tempBlockProductInfo').val().toString()));
+
+    function addBlockProductInfo() {
+        $('.show--info--product').html("");
+        $('.show--info--product').prepend($(tempBlockProductInfo(product.urlImage,product.title,product.price)));
+    }
+
+    function addBlockProduct() {
+        $('.content').prepend($(tempBlockProduct(product.urlImage,product.id,product.id,product.title,product.price)));
+    }
+
+    page.loadData.getAllProduct = () =>{
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": page.url.getAllProduct
+        })
+        .done((data) => {
+            $('.content').html("");
+            $.each(data, (i, item) => {
+                product = item;
+                product.price = App.formatNumberSpace(product.price);
+                addBlockProduct();
+            });
+            handleClickShowInfo();
+        })
+        .fail((jqXHR) => {
+            console.log("Fail");
+            console.log(jqXHR)
+        })
+    }
+
+    page.loadData.getProduct = () => {
+        $('.content--product--top h4').on('click',function (){
+            let productId = $(this).data("id");
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "GET",
+                "url": page.url.getAllProduct + productId,
+            })
+            .done((data) => {
+                product = data;
+                addBlockProductInfo();
+                handleClickShowInfo();
+            })
+            .fail((jqXHR) => {
+
+            })
+
+        })
+    }
+
+    function handleClickShowInfo() {
+        handleClickQuantity();
+        $('#icon_close_cart').on('click',function() {
+            $('.cart').removeClass('show').addClass('hide');
+        })
+        $('.add--cart').on('click',function(){
+            $('.cart').removeClass('hide').addClass('show');
+        })
+        $('#show_cart').on('click',function(){
+            $('.cart').removeClass('hide').addClass('show');
+        })
+        $('.content--product--top h4').on('click',function(){
+            $('.show--info--product').removeClass('hide').addClass('show');
+        })
+        $('#btnClose').on('click',function() {
+            $('.show--info--product').removeClass('show').addClass('hide');
+        })
+        page.loadData.getProduct();
+    }
+
+    function handleClickQuantity() {
+        $(document).ready(function(){
+            $("body").scroll(function(){
+                console.log('a');
+            });
+        });
+        $('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.quantity input');
+        $('.quantity').each(function() {
+            var spinner = $(this),
+                input = spinner.find('input[type="number"]'),
+                btnUp = spinner.find('.quantity-up'),
+                btnDown = spinner.find('.quantity-down'),
+                min = input.attr('min'),
+                max = input.attr('max');
+
+            btnUp.click(function() {
+                var oldValue = parseFloat(input.val());
+                if (oldValue >= max) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue + 1;
+                }
+                spinner.find("input").val(newVal);
+                spinner.find("input").trigger("change");
+                btnDown.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue <= min) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue - 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+            });
+        });
+    }
+
+    $(()=>{
+        page.loadData.getAllProduct();
+    })
+</script>
+</body>
+</html>
