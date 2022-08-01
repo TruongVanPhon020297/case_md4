@@ -18,4 +18,6 @@ public interface UserService extends IGeneralService<User>, UserDetailsService {
     Optional<UserDTO> findUserDTOByEmailPassword(String email);
 
     Optional<UserDTO> findUserDTOByPhone(String phone);
+
+    Optional<UserDTO> findUserDTOById(String id);
 }

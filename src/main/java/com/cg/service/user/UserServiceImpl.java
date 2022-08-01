@@ -69,6 +69,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Optional<UserDTO> findUserDTOById(String id) {
+        return userRepository.findUserDTOById(id);
+    }
+
+    @Override
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         LocationRegion locationRegion = locationRegionRepository.save(user.getLocationRegion());
