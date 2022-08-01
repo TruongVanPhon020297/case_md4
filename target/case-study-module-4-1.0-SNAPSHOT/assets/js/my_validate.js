@@ -17,7 +17,7 @@ $(function (){
             },
             password : {
                 required : true,
-                isPassword : true
+                // isPassword : true
             },
             address : {
                 required : true
@@ -66,9 +66,9 @@ $(function (){
         return this.optional(element) || /^\w+([-+.'][^\s]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i.test(value);
     }, "Vui Lòng Nhập Đúng Định Dạng Email");
 
-    $.validator.addMethod("isPassword",function(value,element){
-        return this.optional(element) || /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^*])(?!.*['"`]).{6,}/i.test(value);
-    }, "Mật Khẩu Ít Nhất 6 Ký Tự , Bao Gồm : Thường - Hoa - Số - Ký Tự Đặc Biệt");
+    // $.validator.addMethod("isPassword",function(value,element){
+    //     return this.optional(element) || /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^*])(?!.*['"`]).{6,}/i.test(value);
+    // }, "Mật Khẩu Ít Nhất 6 Ký Tự , Bao Gồm : Thường - Hoa - Số - Ký Tự Đặc Biệt");
 
     $.validator.addMethod("isPhone",function(value,element){
         return this.optional(element) || /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/i.test(value);

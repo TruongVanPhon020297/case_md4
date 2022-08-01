@@ -225,6 +225,11 @@
         })
         .done((data) => {
             App.SweetAlert.showSuccessAlert("Tạo Tài Khoản Thành Công");
+            page.elements.email.val("");
+            page.elements.password.val("");
+            page.elements.fullName.val("");
+            page.elements.phone.val("");
+            page.elements.address.val("");
         })
         .fail((jqXHR) => {
             page.elements.showError.html("");

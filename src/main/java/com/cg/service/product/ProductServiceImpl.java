@@ -48,8 +48,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductDTO> findAllProductDTO() {
-        List<ProductDTO> productDTOList = new ArrayList<>();
-        return productDTOList = productRepository.findAllProductDTO();
+        return  productRepository.findAllProductDTO();
     }
 
     @Override

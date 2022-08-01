@@ -8,6 +8,7 @@
 
     <!-- Font Icon -->
     <link rel="stylesheet" href="assets/fonts/material-icon/css/material-design-iconic-font.min.css">
+    <th:block th:replace="/layout/head :: head" />
 
     <!-- Main css -->
     <link rel="stylesheet" href="assets/css/style-login.css">
@@ -22,18 +23,19 @@
                 <img class="booking-img" src="assets/img/form-img.jpg" alt="Booking Image">
             </div>
             <div class="booking-form">
+                <div class="modal-alert-danger hide"></div>
                 <form id="booking-form" style="margin-top: 100px;">
                     <h2>Login now!</h2>
                     <div class="form-group form-input">
-                        <input type="text" name="email" id="email" value="" required/>
+                        <input type="text" name="email" id="email"/>
                         <label for="email" class="form-label">Your Email</label>
                     </div>
                     <div class="form-group form-input">
-                        <input type="number" name="password" id="password" value="" required />
+                        <input type="password" name="password" id="password"/>
                         <label for="password" class="form-label">Your Password</label>
                     </div>
                     <div class="form-submit">
-                        <input type="submit" value="Login" class="submit" id="submit" name="submit" />
+                        <input type="button" value="Login" class="submit" id="btnLogin" name="submit" />
                         <a href="/home" class="vertify-booking">Back To Home !</a>
                         <a href="/register" class="vertify-booking">Register</a>
                     </div>
@@ -48,7 +50,7 @@
 <script>
     let page = {
         url : {
-
+            doLogin : App.BASER_URL + "auth/" + "login"
         },
         elements : {
             locationRegion : {}
@@ -61,9 +63,39 @@
         },
         initializeControllEvents : {}
     }
+
     let user = new User();
+
     page.elements.password = $('#password');
     page.elements.email = $('#email');
+    page.elements.btnLogin = $('#btnLogin');
+
+    page.elements.btnLogin.on('click',function (){
+        page.commands.doLogin();
+    })
+
+    page.commands.doLogin = () => {
+        user.email = page.elements.email.val();
+        user.password = page.elements.password.val();
+
+        $.ajax({
+            "headers" : {
+                "accept" : "application/json",
+                "content-type" : "application/json"
+            },
+            "type" : "POST",
+            "url" : page.url.doLogin,
+            "data" : JSON.stringify(user)
+        })
+        .done((data) => {
+            console.log(data);
+            location.href = "/home";
+        })
+        .fail((jqXHR) => {
+            console.log(jqXHR);
+            App.IziToast.showErrorAlert("Thông Tin Đăng Nhập Không Chính Xác");
+        })
+    }
 
 
 </script>

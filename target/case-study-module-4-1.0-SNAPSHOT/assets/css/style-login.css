@@ -394,6 +394,35 @@ ul li {
   z-index: 2;
   color: #bebebe; }
 
+.modal-alert-danger {
+  width: 100%;
+  padding: 10px 35px;
+  margin-bottom: 15px;
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+  position: absolute;
+  top: 80px;
+  left: 0;
+}
+
+.modal-alert-danger ul {
+  margin-bottom: 0;
+}
+
+label.error {
+  display: list-item;
+  margin-top: 5px;
+  color: #842029;
+}
+.show {
+  display: block !important;
+}
+
+.hide  {
+  display: none;
+}
+
 ul li:not(.init) {
   display: none;
   background: #fff;

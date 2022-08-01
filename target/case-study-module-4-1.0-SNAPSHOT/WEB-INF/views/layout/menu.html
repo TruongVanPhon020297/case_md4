@@ -14,14 +14,18 @@
                 <li><a href="#">Liên Hệ</a></li>
             </ul>
         </div>
-        <div class="header--right">
+        <div class="header--right" th:switch="${userDTO}">
             <form action="" class="header--right--form">
                 <input type="text" class="header--right--form--search" placeholder="Tìm Kiếm">
                 <button><i class="fa fa-search" aria-hidden="true"></i></button>
             </form>
-            <a href="/login">
+            <a href="/login" th:case="null">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
                 <span>Đăng Nhập</span>
+            </a>
+            <a href="/logout" th:case="*">
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <span th:text="${userDTO.fullName}" data-th-id="${userDTO.id}"></span>
             </a>
             <a href="javascript: void(0);" id="show_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
         </div>

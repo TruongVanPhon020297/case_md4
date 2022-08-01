@@ -38,6 +38,9 @@
 
     page.dialogs.elements.modalProductInfo = $('.show--info--product');
 
+    let idUser = $('.header--right a span').attr('id');
+    console.log(idUser);
+
     let product = new Product();
 
     let tempBlockProduct = $.validator.format($.trim($('#tempBlockProduct').val().toString()));
@@ -63,6 +66,7 @@
             "url": page.url.getAllProduct
         })
         .done((data) => {
+            console.log(data);
             $('.content').html("");
             $.each(data, (i, item) => {
                 product = item;
