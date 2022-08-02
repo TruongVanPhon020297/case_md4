@@ -11,5 +11,5 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("SELECT NEW com.cg.model.dto.CartInfoDTO (c.id,c.grandTotal,c.user) FROM Cart c WHERE c.user.id = ?1")
-    Optional<CartInfoDTO> findUserDTOByUserId(String id);
+    Optional<CartInfoDTO> findCartInfoDTOByUserId(Long id);
 }

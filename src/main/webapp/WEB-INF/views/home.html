@@ -37,9 +37,9 @@
     }
 
     page.dialogs.elements.modalProductInfo = $('.show--info--product');
+    page.elements.btnAddCart = $('.add--cart');
 
     let idUser = $('.header--right a span').attr('id');
-    console.log(idUser);
 
     let product = new Product();
 
@@ -53,7 +53,7 @@
     }
 
     function addBlockProduct() {
-        $('.content').prepend($(tempBlockProduct(product.urlImage,product.id,product.id,product.title,product.price)));
+        $('.content').prepend($(tempBlockProduct(product.urlImage,product.id,product.id,product.title,product.price,product.id)));
     }
 
     page.loadData.getAllProduct = () =>{
@@ -110,9 +110,9 @@
         $('#icon_close_cart').on('click',function() {
             $('.cart').removeClass('show').addClass('hide');
         })
-        $('.add--cart').on('click',function(){
-            $('.cart').removeClass('hide').addClass('show');
-        })
+        // $('.add--cart').on('click',function(){
+        //     $('.cart').removeClass('hide').addClass('show');
+        // })
         $('#show_cart').on('click',function(){
             $('.cart').removeClass('hide').addClass('show');
         })
@@ -123,6 +123,7 @@
             $('.show--info--product').removeClass('show').addClass('hide');
         })
         page.loadData.getProduct();
+        page.commands.doAddCart();
     }
 
     function handleClickQuantity() {
@@ -167,7 +168,11 @@
         page.loadData.getAllProduct();
     })
 
-
+    page.commands.doAddCart = () => {
+        page.elements.btnAddCart.on('click',function (){
+            alert('Hello');
+        })
+    }
 </script>
 </body>
 </html>

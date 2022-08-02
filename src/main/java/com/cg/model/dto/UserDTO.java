@@ -1,6 +1,7 @@
 package com.cg.model.dto;
 
 
+import com.cg.model.LocationRegion;
 import com.cg.model.Role;
 import com.cg.model.User;
 import lombok.AllArgsConstructor;
@@ -55,6 +56,18 @@ public class UserDTO implements Validator {
         this.email = email;
         this.password = password;
         this.roleDTO = role.toRoleDTO();
+    }
+
+    public UserDTO(Long id, String fullName, String email, String password, String phone, boolean isActive, String urlImage, Role role, LocationRegion locationRegion) {
+        this.id = id.toString();
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.isActive = isActive;
+        this.urlImage = urlImage;
+        this.roleDTO = role.toRoleDTO();
+        this.locationRegion = locationRegion.toLocationRegionDTO();
     }
 
     public User toUser() {

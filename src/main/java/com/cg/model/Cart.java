@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.CartInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,11 @@ public class Cart extends BaseEntities{
 
     @OneToMany(mappedBy = "cart")
     private Set<CartItem> cartItems;
+
+    public CartInfoDTO toCartInfoDTO() {
+        return new CartInfoDTO()
+                .setId(id.toString())
+                .setGrandTotal(grandTotal.toString())
+                .setUser(user.toUserDTO());
+    }
 }

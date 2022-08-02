@@ -19,5 +19,5 @@ public interface UserService extends IGeneralService<User>, UserDetailsService {
 
     Optional<UserDTO> findUserDTOByPhone(String phone);
 
-    Optional<UserDTO> findUserDTOById(String id);
+    Optional<UserDTO> findUserDTOById(long id);
 }

@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.CartItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,4 +42,15 @@ public class CartItem{
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    public CartItemDTO toCartItemDTO() {
+        return new CartItemDTO()
+                .setId(id.toString())
+                .setTitle(title)
+                .setPrice(price.toString())
+                .setQuantity(String.valueOf(quantity))
+                .setTotalPrice(totalPrice.toString())
+                .setProduct(product.toProductDTO())
+                .setCart(cart.toCartInfoDTO());
+    }
 }

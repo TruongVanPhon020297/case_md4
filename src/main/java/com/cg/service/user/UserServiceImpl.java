@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<UserDTO> findUserDTOById(String id) {
+    public Optional<UserDTO> findUserDTOById(long id) {
         return userRepository.findUserDTOById(id);
     }
 

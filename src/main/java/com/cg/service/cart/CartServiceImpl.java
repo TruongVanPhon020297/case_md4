@@ -1,19 +1,27 @@
 package com.cg.service.cart;
 
 import com.cg.model.Cart;
+import com.cg.model.CartItem;
 import com.cg.model.dto.CartInfoDTO;
+import com.cg.model.dto.CartItemDTO;
+import com.cg.repository.CartItemRepository;
 import com.cg.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class CartServiceImpl implements CartService{
+
+    @Autowired
+    CartItemRepository cartItemRepository;
+
     @Autowired
     CartRepository cartRepository;
     @Override
@@ -42,12 +50,28 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public Optional<CartInfoDTO> findUserDTOByUserId(String id) {
-        return cartRepository.findUserDTOByUserId(id);
+    public Optional<CartInfoDTO> findCartInfoDTOByUserId(long id) {
+        return cartRepository.findCartInfoDTOByUserId(id);
     }
 
     @Override
-    public void addCart() {
-
+    public CartItem addNewCart(Cart cart, CartItem cartItem) {
+        Cart cartNew =  cartRepository.save(cart);
+        cartItem.setCart(cartNew);
+        return cartItemRepository.save(cartItem);
     }
+
+    @Override
+    public CartInfoDTO addNewProductByCart(Cart cart, CartItem cartItem) {
+        cartItemRepository.save(cartItem);
+        return cartRepository.save(cart).toCartInfoDTO();
+    }
+
+    @Override
+    public CartInfoDTO updateProductByCart(Cart cart, CartItem cartItem) {
+        cartItemRepository.save(cartItem);
+        return cartRepository.save(cart).toCartInfoDTO();
+    }
+
+
 }
