@@ -88,7 +88,7 @@ public class CartRestController {
         }else {
             String cartId = cartInfoDTOOptional.get().getId();
             String productId = productDTOOptional.get().getId();
-            Optional<CartItemDTO> cartItemDTO = cartItemService.findCartItemDTOByCartIdAndProductId(cartId,productId);
+            Optional<CartItemDTO> cartItemDTO = cartItemService.findCartItemDTOByCartIdAndProductId(Long.parseLong(cartId),Long.parseLong(productId));
 
             if (!cartItemDTO.isPresent()) {
 

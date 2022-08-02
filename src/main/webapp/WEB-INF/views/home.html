@@ -22,7 +22,8 @@
 <script>
     let page = {
         url : {
-            getAllProduct : App.BASER_URL + "products/"
+            getAllProduct : App.BASER_URL + "products/",
+            doAddCart : App.BASER_URL + "carts/add"
         },
         elements : {
             locationRegion : {}
@@ -37,11 +38,10 @@
     }
 
     page.dialogs.elements.modalProductInfo = $('.show--info--product');
-    page.elements.btnAddCart = $('.add--cart');
-
-    let idUser = $('.header--right a span').attr('id');
 
     let product = new Product();
+
+    let cart = new Cart();
 
     let tempBlockProduct = $.validator.format($.trim($('#tempBlockProduct').val().toString()));
 
@@ -106,13 +106,11 @@
     }
 
     function handleClickShowInfo() {
+
         handleClickQuantity();
         $('#icon_close_cart').on('click',function() {
             $('.cart').removeClass('show').addClass('hide');
         })
-        // $('.add--cart').on('click',function(){
-        //     $('.cart').removeClass('hide').addClass('show');
-        // })
         $('#show_cart').on('click',function(){
             $('.cart').removeClass('hide').addClass('show');
         })
@@ -169,8 +167,29 @@
     })
 
     page.commands.doAddCart = () => {
-        page.elements.btnAddCart.on('click',function (){
-            alert('Hello');
+        $('.add--cart').on('click',function (){
+            let userId = $('.header--right a span').attr('id');
+            let productId = $(this).data("id");
+            let quantity = 1;
+            cart.userId = userId;
+            cart.productId = productId;
+            cart.quantity = quantity;
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "POST",
+                "url": page.url.doAddCart,
+                "data": JSON.stringify(cart)
+            })
+            .done((data) => {
+                console.log(data);
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            })
         })
     }
 </script>

@@ -43,7 +43,7 @@ public class CartItemServiceImpl implements CartItemService{
     }
 
     @Override
-    public Optional<CartItemDTO> findCartItemDTOByCartIdAndProductId(String cartId, String productId) {
+    public Optional<CartItemDTO> findCartItemDTOByCartIdAndProductId(long cartId, long productId) {
         return cartItemRepository.findCartItemDTOByCartIdAndProductId(cartId,productId);
     }
 }
