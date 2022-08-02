@@ -62,15 +62,17 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public CartInfoDTO addNewProductByCart(Cart cart, CartItem cartItem) {
-        cartItemRepository.save(cartItem);
-        return cartRepository.save(cart).toCartInfoDTO();
+    public CartItem addNewProductByCart(Cart cart, CartItem cartItem) {
+        CartItem cartItemNew = cartItemRepository.save(cartItem);
+        cartRepository.save(cart).toCartInfoDTO();
+        return cartItemNew;
     }
 
     @Override
-    public CartInfoDTO updateProductByCart(Cart cart, CartItem cartItem) {
-        cartItemRepository.save(cartItem);
-        return cartRepository.save(cart).toCartInfoDTO();
+    public CartItem updateProductByCart(Cart cart, CartItem cartItem) {
+        CartItem cartItemNew = cartItemRepository.save(cartItem);
+        cartRepository.save(cart).toCartInfoDTO();
+        return cartItemNew;
     }
 
 

@@ -1,5 +1,6 @@
 package com.cg.controller.rest;
 
+import com.cg.exception.DataInputException;
 import com.cg.exception.ResourceNotFoundException;
 import com.cg.model.Cart;
 import com.cg.model.CartItem;
@@ -9,17 +10,20 @@ import com.cg.service.cart.CartService;
 import com.cg.service.product.ProductService;
 import com.cg.service.user.UserService;
 import com.cg.util.AppUtil;
+import com.sun.activation.registries.MailcapParseException;
+import jdk.internal.dynalink.linker.LinkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -40,8 +44,39 @@ public class CartRestController {
     @Autowired
     private AppUtil appUtil;
 
+    @GetMapping
+    public ResponseEntity<?> getAllCartItem(@Valid @RequestBody UserDTO userDTO,BindingResult bindingResult){
+        new UserDTO().validate(userDTO, bindingResult);
+        if (bindingResult.hasFieldErrors()){
+            return appUtil.mapErrorToResponse(bindingResult);
+        }
+
+        Optional<UserDTO> userDTOOptional = userService.findUserDTOById(Long.parseLong(userDTO.getId()));
+
+        if (!userDTOOptional.isPresent()){
+            throw new ResourceNotFoundException("Không Tìm Thấy Người Dùng");
+        }
+
+        String userId = userDTOOptional.get().getId();
+
+        Optional<CartInfoDTO> cartInfoDTOOptional = cartService.findCartInfoDTOByUserId(Long.parseLong(userId));
+
+        Map<String,String> result = new HashMap<>();
+
+        if (!cartInfoDTOOptional.isPresent()) {
+            result.put("noCart","Giỏ Hàng Của Bạn Đang Trống");
+            return new ResponseEntity<>(result,HttpStatus.OK);
+        }
+
+        String cartId = cartInfoDTOOptional.get().getId();
+
+        List<CartItemDTO> cartItemDTOList = cartItemService.findAllCartItemByCartId(Long.parseLong(cartId));
+
+        return new ResponseEntity<>(cartItemDTOList,HttpStatus.OK);
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<?> register(@Valid @RequestBody CartDTO cartDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> addCart(@Valid @RequestBody CartDTO cartDTO, BindingResult bindingResult) {
         new CartDTO().validate(cartDTO, bindingResult);
         if (bindingResult.hasFieldErrors()){
             return appUtil.mapErrorToResponse(bindingResult);
@@ -68,11 +103,14 @@ public class CartRestController {
         BigDecimal price = new BigDecimal(Long.parseLong(productDTOOptional.get().getPrice()));
         BigDecimal grandTotal = price.multiply(new BigDecimal(Long.parseLong(quantity)));
 
+
         CartItem cartItem = new CartItem();
         Cart cart = new Cart();
+        Map<String, Object> result = new HashMap<>();
+
+        String success;
 
         if (!cartInfoDTOOptional.isPresent()) {
-            cart = new Cart();
             cart.setUser(userDTOOptional.get().toUser());
             cart.setGrandTotal(grandTotal);
 
@@ -83,8 +121,13 @@ public class CartRestController {
             cartItem.setTotalPrice(grandTotal);
             cartItem.setProduct(productDTOOptional.get().toProduct());
 
-            cartService.addNewCart(cart,cartItem);
-            return new ResponseEntity<>("Tạo Giỏ Hàng Thành Công Thêm Mới Sản Phẩm Thành Công",HttpStatus.CREATED);
+            try{
+                cartService.addNewCart(cart,cartItem);
+                success = "Tạo Giỏ Hàng Thành Công , Thêm Mới Sản Phẩm Thành Công";
+                result.put("success", success);
+            }catch (DataIntegrityViolationException e){
+                throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+            }
         }else {
             String cartId = cartInfoDTOOptional.get().getId();
             String productId = productDTOOptional.get().getId();
@@ -100,17 +143,29 @@ public class CartRestController {
                 cart = cartInfoDTOOptional.get().toCart();
                 cartItem.setCart(cart);
                 cart.setGrandTotal(cart.getGrandTotal().add(grandTotal));
-                cartService.addNewProductByCart(cart,cartItem);
-                return new ResponseEntity<>("Thêm Mới Sản Phẩm Thành Công",HttpStatus.CREATED);
+                try{
+                    cartService.addNewProductByCart(cart,cartItem);
+                    success ="Thêm Mới Sản Phẩm Thành Công";
+                    result.put("success", success);
+                }catch (DataIntegrityViolationException e){
+                    throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                }
+                return new ResponseEntity<>(result,HttpStatus.CREATED);
             }else {
                 cartItem = cartItemDTO.get().toCartItem();
                 cartItem.setQuantity(cartItem.getQuantity() + Integer.parseInt(quantity));
                 cartItem.setTotalPrice(cartItem.getTotalPrice().add(grandTotal));
                 cart = cartInfoDTOOptional.get().toCart();
                 cart.setGrandTotal(cart.getGrandTotal().add(grandTotal));
-                cartService.updateProductByCart(cart,cartItem);
-                return new ResponseEntity<>("Cập Nhập Sản Phẩm Thành Công",HttpStatus.CREATED);
+                try{
+                    cartService.updateProductByCart(cart,cartItem);
+                    success = new String("Cập Nhập Sản Phẩm Thành Công");
+                    result.put("success", success);
+                }catch (DataIntegrityViolationException e){
+                    throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                }
             }
         }
+        return new ResponseEntity<>(result,HttpStatus.CREATED);
     }
 }

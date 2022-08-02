@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface CartService extends IGeneralService<Cart> {
     Optional<CartInfoDTO> findCartInfoDTOByUserId(long id);
     CartItem addNewCart(Cart cart,CartItem cartItem);
-    CartInfoDTO addNewProductByCart(Cart cart,CartItem cartItem);
-    CartInfoDTO updateProductByCart(Cart cart, CartItem cartItem);
+    CartItem addNewProductByCart(Cart cart,CartItem cartItem);
+    CartItem updateProductByCart(Cart cart, CartItem cartItem);
 }

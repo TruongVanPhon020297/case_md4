@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <th:block th:fragment="menu">
-    <div class="header">
+    <div class="header" th:switch="${userDTO}">
         <div class="header--left">
             <h1><a href="/home">Bánh</a></h1>
             <h4>Bánh Ngọt Nhiều Loại</h4>
@@ -14,20 +14,27 @@
                 <li><a href="#">Liên Hệ</a></li>
             </ul>
         </div>
-        <div class="header--right" th:switch="${userDTO}">
+        <div class="header--right" th:case="null">
             <form action="" class="header--right--form">
                 <input type="text" class="header--right--form--search" placeholder="Tìm Kiếm">
                 <button><i class="fa fa-search" aria-hidden="true"></i></button>
             </form>
-            <a href="/login" th:case="null">
+            <a href="/login">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
                 <span>Đăng Nhập</span>
             </a>
-            <a href="/logout" th:case="*">
+            <a href="javascript: void(0);" class="show_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+        </div>
+        <div class="header--right" th:case="*">
+            <form action="" class="header--right--form">
+                <input type="text" class="header--right--form--search" placeholder="Tìm Kiếm">
+                <button><i class="fa fa-search" aria-hidden="true"></i></button>
+            </form>
+            <a href="/logout">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
                 <span th:text="${userDTO.fullName}" data-th-id="${userDTO.id}"></span>
             </a>
-            <a href="javascript: void(0);" id="show_cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+            <a href="javascript: void(0);" class="show_cart" data-th-id="${userDTO.id}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
         </div>
     </div>
 </th:block>
