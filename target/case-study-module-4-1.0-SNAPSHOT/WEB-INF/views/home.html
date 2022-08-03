@@ -18,6 +18,7 @@
 <th:block th:replace="/layout/temp_block_product_info :: temp_block_product_info" />
 <th:block th:replace="/layout/cart_modal :: cart_modal" />
 <th:block th:replace="/layout/product_info :: product_info" />
+<th:block th:replace="/layout/tem_block_product_cart :: temp_block_product_cart" />
 <th:block th:replace="/layout/script :: script" />
 <script>
     let page = {
@@ -45,13 +46,23 @@
 
     let cart = new Cart();
 
+    let user = new User();
+
+    let cartItem = new CartItem();
+
     let tempBlockProduct = $.validator.format($.trim($('#tempBlockProduct').val().toString()));
 
     let tempBlockProductInfo = $.validator.format($.trim($('#tempBlockProductInfo').val().toString()));
 
+    let tempBlockProductCart = $.validator.format($.trim($('#tempBlockProductCart').val().toString()));
+
     function addBlockProductInfo() {
         $('.show--info--product').html("");
         $('.show--info--product').prepend($(tempBlockProductInfo(product.urlImage,product.title,product.price)));
+    }
+
+    function addBlockProductCart() {
+        $('.cart--info--content').prepend($(tempBlockProductCart(cartItem.product.urlImage,cartItem.title,cartItem.price,cartItem.quantity,cartItem.product.id)));
     }
 
     function addBlockProduct() {
@@ -68,7 +79,6 @@
             "url": page.url.getAllProduct
         })
         .done((data) => {
-            console.log(data);
             $('.content').html("");
             $.each(data, (i, item) => {
                 product = item;
@@ -78,7 +88,6 @@
             handleClickShowInfo();
         })
         .fail((jqXHR) => {
-            console.log("Fail");
             console.log(jqXHR)
         })
     }
@@ -188,9 +197,6 @@
                 "data": JSON.stringify(cart)
             })
             .done((data) => {
-                console.log(data);
-                console.log(data.success);
-                console.log(data.cartItem);
                 App.IziToast.showSuccessAlert(data.success);
             })
             .fail((jqXHR) => {
@@ -212,7 +218,31 @@
     page.commands.showCartInfo = () => {
         page.elements.btnShowCartInfo.on('click',function (){
             let userId = page.elements.btnShowCartInfo.attr("id");
-            alert(userId);
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "GET",
+                "url": page.url.getAllCartItem + userId,
+            })
+            .done((data) => {
+                $('.cart--info--content').html("");
+                $('.cart--info--total span').html("");
+                let grandTotal = 0;
+                $.each(data, (i, item) => {
+                    cartItem = item;
+                    cartItem.price = App.formatNumberSpace(cartItem.price);
+                    grandTotal = App.formatNumberSpace(cartItem.cart.grandTotal);
+                    addBlockProductCart();
+                });
+                $('.cart--info--total span').text(`${grandTotal} đ`);
+                handleClickQuantity();
+                $('.cart').removeClass('hide').addClass('show');
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            })
         })
     }
 </script>

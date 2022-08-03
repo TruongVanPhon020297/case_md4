@@ -44,14 +44,10 @@ public class CartRestController {
     @Autowired
     private AppUtil appUtil;
 
-    @GetMapping
-    public ResponseEntity<?> getAllCartItem(@Valid @RequestBody UserDTO userDTO,BindingResult bindingResult){
-        new UserDTO().validate(userDTO, bindingResult);
-        if (bindingResult.hasFieldErrors()){
-            return appUtil.mapErrorToResponse(bindingResult);
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAllCartItem(@PathVariable String id){
 
-        Optional<UserDTO> userDTOOptional = userService.findUserDTOById(Long.parseLong(userDTO.getId()));
+        Optional<UserDTO> userDTOOptional = userService.findUserDTOById(Long.parseLong(id));
 
         if (!userDTOOptional.isPresent()){
             throw new ResourceNotFoundException("Không Tìm Thấy Người Dùng");

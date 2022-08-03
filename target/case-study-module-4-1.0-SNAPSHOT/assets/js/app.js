@@ -109,3 +109,22 @@ class Cart {
         this.quantity = quantity;
     }
 }
+
+class CartInfo {
+    constructor(id,grandTotal,user) {
+        this.id = id;
+        this.grandTotal = grandTotal;
+        this.user = user;
+    }
+}
+class CartItem {
+    constructor(id,price,quantity,title,totalPrice,product,cart) {
+        this.id = id;
+        this.price = price;
+        this.quantity = quantity;
+        this.title = title;
+        this.totalPrice = totalPrice;
+        this.product = product;
+        this.cart = cart;
+    }
+}
