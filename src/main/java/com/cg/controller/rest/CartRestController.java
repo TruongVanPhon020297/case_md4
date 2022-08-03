@@ -174,7 +174,7 @@ public class CartRestController {
                 cart.setGrandTotal(cart.getGrandTotal().add(grandTotal));
                 try{
                     CartItem cartItemReduce = cartService.updateProductByCart(cart,cartItem);
-                    success = "Cập Nhập Sản Phẩm Thành Công";
+                    success = "Tăng Số Lượng Sản Phẩm Thành Công";
                     result.put("success", success);
                     result.put("cartItem",cartItemReduce.toCartItemDTO());
                 }catch (DataIntegrityViolationException e){
@@ -222,22 +222,16 @@ public class CartRestController {
         String success;
 
         if (!cartInfoDTOOptional.isPresent()) {
-            success = "Người Dùng Chưa Có Giỏ Hàng";
-            result.put("success",success);
-            return new ResponseEntity<>(result,HttpStatus.OK);
+            throw new ResourceNotFoundException("Người Dùng Chưa Có Giỏ Hàng Để Giảm Số Lượng Sản Phẩm");
         }else {
             String cartId = cartInfoDTOOptional.get().getId();
             String productId = productDTOOptional.get().getId();
             Optional<CartItemDTO> cartItemDTO = cartItemService.findCartItemDTOByCartIdAndProductId(Long.parseLong(cartId),Long.parseLong(productId));
             if (!cartItemDTO.isPresent()) {
-                success = "Sản Phẩm Chưa Tồn Tại Trong Giỏ Hàng";
-                result.put("success",success);
-                return new ResponseEntity<>(result,HttpStatus.OK);
+                throw new ResourceNotFoundException("Sản Phẩm Chưa Tồn Tại Trong Giỏ Hàng");
             }else {
                 if (Integer.parseInt(cartItemDTO.get().getQuantity()) == 1){
-                    success = "Số Lượng Tối Thiểu Là 1 Sản Phẩm";
-                    result.put("success",success);
-                    return new ResponseEntity<>(result,HttpStatus.OK);
+                    throw new DataInputException("Số Lượng Tối Thiểu Là 1");
                 }else {
                     String quantity = "1";
                     BigDecimal price = new BigDecimal(Long.parseLong(productDTOOptional.get().getPrice()));
@@ -255,7 +249,7 @@ public class CartRestController {
 
                     try{
                         CartItem cartItemIncrease = cartService.updateProductByCart(cart,cartItem);
-                        success = new String("Cập Nhập Sản Phẩm Thành Công");
+                        success = new String("Giảm Số Lượng Sản Phẩm Thành Công");
                         result.put("success", success);
                         result.put("cartItem",cartItemIncrease.toCartItemDTO());
 
@@ -301,7 +295,7 @@ public class CartRestController {
         Cart cart = new Cart();
         Map<String, Object> result = new HashMap<>();
 
-        String success;
+        String success,successFirst;
 
         if (!cartInfoDTOOptional.isPresent()) {
             cart.setUser(userDTOOptional.get().toUser());
@@ -316,7 +310,9 @@ public class CartRestController {
 
             try{
                 cartService.addNewCart(cart,cartItem);
-                success = "Tạo Giỏ Hàng Thành Công , Thêm Mới Sản Phẩm Thành Công";
+                successFirst = "Tạo Mới Giỏ Hàng Thành Công";
+                success = "Thêm Sản Phẩm Thành Công";
+                result.put("successFirst",successFirst);
                 result.put("success", success);
             }catch (DataIntegrityViolationException e){
                 throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");

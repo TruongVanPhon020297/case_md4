@@ -13,11 +13,15 @@
                     <span id="product--price">{2} VNĐ</span>
                     <span>Số Lượng :</span>
                     <div class="quantity">
-                        <input type="number" min="1" max="100" step="1" value="1">
+                        <input type="number" min="1" max="100" step="1" value="1" class = "input_quantity_{3}">
+                        <div class="quantity-nav quantity--product--info">
+                            <div class="quantity-button quantity-up_pro" data-id = "{3}">+</div>
+                            <div class="quantity-button quantity-down_pro" data-id = "{3}">-</div>
+                        </div>
                     </div>
                 </div>
                 <div class="show--info--product--content--product--bottom">
-                    <a href="javascript: void(0);">Thêm Vào Giỏ Hàng</a>
+                    <a href="javascript: void(0);" data-id = "{3}">Thêm Vào Giỏ Hàng</a>
                 </div>
             </div>
             <a href="javascript: void(0);" id="btnClose"><i class="fa fa-times" aria-hidden="true"></i></a>

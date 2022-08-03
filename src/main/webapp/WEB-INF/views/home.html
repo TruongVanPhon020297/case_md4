@@ -41,12 +41,11 @@
         initializeControllEvents : {}
     }
 
-    page.dialogs.elements.modalProductInfo = $('.show--info--product');
     page.elements.btnShowCartInfo = $('.show_cart');
     page.elements.cartInfoContent = $('.cart--info--content');
     page.elements.cartInfoGrandTotal = $('.cart--info--total span');
     page.dialogs.elements.modalCart = $('.cart');
-
+    page.dialogs.elements.modalProductInfo = $('.show--info--product');
 
     let product = new Product();
 
@@ -64,7 +63,7 @@
 
     function addBlockProductInfo() {
         $('.show--info--product').html("");
-        $('.show--info--product').prepend($(tempBlockProductInfo(product.urlImage,product.title,product.price)));
+        $('.show--info--product').prepend($(tempBlockProductInfo(product.urlImage,product.title,product.price,product.id)));
     }
 
     function addBlockProductCart() {
@@ -91,7 +90,7 @@
                 product.price = App.formatNumberSpace(product.price);
                 addBlockProduct();
             });
-            handleClickShowInfo();
+            page.commands.handleClickShowInfo();
         })
         .fail((jqXHR) => {
             console.log(jqXHR)
@@ -113,7 +112,7 @@
             .done((data) => {
                 product = data;
                 addBlockProductInfo();
-                handleClickShowInfo();
+                page.commands.handleClickShowInfo();
             })
             .fail((jqXHR) => {
 
@@ -122,7 +121,7 @@
         })
     }
 
-    function handleClickShowInfo() {
+    page.commands.handleClickShowInfo = ()  => {
 
         handleClickQuantity();
         $('#icon_close_cart').on('click',function() {
@@ -137,6 +136,8 @@
         page.loadData.getProduct();
         page.commands.doAddCart();
         page.commands.showCartInfo();
+        page.commands.doAddCartProductInfo();
+        page.commands.handleClickQuantityProductInfo();
     }
 
     function handleClickQuantity() {
@@ -167,6 +168,9 @@
                 "data": JSON.stringify(cart)
             })
             .done((data) => {
+                if (data.successFirst){
+                    App.IziToast.showSuccessAlert(data.successFirst);
+                }
                 App.IziToast.showSuccessAlert(data.success);
             })
             .fail((jqXHR) => {
@@ -294,9 +298,82 @@
                     if (jqXHR.status === 401)  {
                         App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
                     }else {
-                        $(`.input_${productId}`).val("1");
+                        if(jqXHR.responseJSON.message){
+                            let msg = jqXHR.responseJSON.message;
+                            App.IziToast.showErrorAlert(msg);
+                        }else if(jqXHR.responseJSON){
+                            $.each(jqXHR.responseJSON,(key,item) =>{
+                                App.IziToast.showErrorAlert(item);
+                            })
+                        }
                     }
                 })
+            }
+        })
+    }
+    page.commands.doAddCartProductInfo = () => {
+        $('.show--info--product--content--product--bottom a').on('click',function (){
+            let userId = $('.header--right a span').attr('id');
+            let productId = $(this).data("id");
+            let quantity = $(`.input_quantity_${productId}`).val();
+            cart.userId = userId;
+            cart.productId = productId;
+            cart.quantity = quantity;
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "POST",
+                "url": page.url.doAddCart,
+                "data": JSON.stringify(cart)
+            })
+            .done((data) => {
+                if (data.successFirst){
+                    App.IziToast.showSuccessAlert(data.successFirst);
+                }
+                App.IziToast.showSuccessAlert(data.success);
+                $('.show--info--product').removeClass('show').addClass('hide');
+            })
+            .fail((jqXHR) => {
+                if (jqXHR.status === 401)  {
+                    App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Mua Hàng");
+                }else {
+                    if(jqXHR.responseJSON.message){
+                        let msg = jqXHR.responseJSON.message;
+                        App.IziToast.showErrorAlert(msg);
+                    }else if(jqXHR.responseJSON){
+                        $.each(jqXHR.responseJSON,(key,item) =>{
+                            App.IziToast.showErrorAlert(item);
+                        })
+                    }
+                }
+            })
+        })
+    }
+
+    page.commands.handleClickQuantityProductInfo = () => {
+        $('.quantity--product--info .quantity-up_pro').on("click",function (){
+            let productId = $(this).data("id");
+            let quantity = $(`.input_quantity_${productId}`).val();
+
+            if ($.isNumeric(quantity)) {
+                let quantityChange = Number(quantity) + 1;
+                $(`.input_quantity_${productId}`).val(quantityChange);
+            }else {
+                $(`.input_quantity_${productId}`).val("1");
+            }
+        })
+        $('.quantity--product--info .quantity-down_pro').on("click",function (){
+            let productId = $(this).data("id");
+            let quantity = $(`.input_quantity_${productId}`).val();
+
+            if ($.isNumeric(quantity) && Number(quantity) > 1) {
+                let quantityChange = Number(quantity) - 1;
+                $(`.input_quantity_${productId}`).val(quantityChange);
+            }else{
+                $(`.input_quantity_${productId}`).val("1");
             }
         })
     }
