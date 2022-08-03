@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +46,19 @@ public class CartRestController {
     @Autowired
     private AppUtil appUtil;
 
+    private String getPrincipal() {
+        String email = "";
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        email = ((UserDetails) principal).getUsername();
+        return email;
+    }
+
+    private UserDTO getUserDTO(){
+        String email = getPrincipal();
+        Optional<UserDTO> userDTOOptional = userService.findUserDTOByEmail(email);
+        return userDTOOptional.get();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getAllCartItem(@PathVariable String id){
 
@@ -69,6 +84,104 @@ public class CartRestController {
         List<CartItemDTO> cartItemDTOList = cartItemService.findAllCartItemByCartId(Long.parseLong(cartId));
 
         return new ResponseEntity<>(cartItemDTOList,HttpStatus.OK);
+    }
+
+    @PostMapping("/reduce")
+    public ResponseEntity<?> doReduceCart(@Valid @RequestBody CartDTO cartDTO, BindingResult bindingResult){
+        new CartDTO().validate(cartDTO, bindingResult);
+        if (bindingResult.hasFieldErrors()){
+            return appUtil.mapErrorToResponse(bindingResult);
+        }
+        Optional<UserDTO> userDTOOptional = userService.findUserDTOById(Long.parseLong(cartDTO.getUserId()));
+
+        if (!userDTOOptional.isPresent()){
+            throw new ResourceNotFoundException("Không Tìm Thấy Người Dùng");
+        }
+
+        UserDTO userDTOLogin = getUserDTO();
+
+        if (!(userDTOOptional.get().getId()).equals(userDTOLogin.getId())){
+            throw new ResourceNotFoundException("Không Phải Người Dùng Đang Đăng Nhập Thao Tác");
+        }
+
+        Optional<ProductDTO> productDTOOptional = productService.getProductDTOById(Long.parseLong(cartDTO.getProductId()));
+
+        if (!productDTOOptional.isPresent()) {
+            throw new ResourceNotFoundException("Không Tìm Thấy Sản Phẩm");
+        }
+
+        String userId = userDTOOptional.get().getId();
+
+        Optional<CartInfoDTO> cartInfoDTOOptional = cartService.findCartInfoDTOByUserId(Long.parseLong(userId));
+
+        String quantity = "1";
+        BigDecimal price = new BigDecimal(Long.parseLong(productDTOOptional.get().getPrice()));
+        BigDecimal grandTotal = price.multiply(new BigDecimal(Long.parseLong(quantity)));
+
+
+        CartItem cartItem = new CartItem();
+        Cart cart = new Cart();
+        Map<String, Object> result = new HashMap<>();
+
+        String success;
+
+        if (!cartInfoDTOOptional.isPresent()) {
+            cart.setUser(userDTOOptional.get().toUser());
+            cart.setGrandTotal(grandTotal);
+
+            cartItem = new CartItem();
+            cartItem.setPrice(new BigDecimal(Long.parseLong(productDTOOptional.get().getPrice())));
+            cartItem.setQuantity(Integer.parseInt(quantity));
+            cartItem.setTitle(productDTOOptional.get().getTitle());
+            cartItem.setTotalPrice(grandTotal);
+            cartItem.setProduct(productDTOOptional.get().toProduct());
+
+            try{
+                CartItem cartItemNew = cartService.addNewCart(cart,cartItem);
+                success = "Tạo Giỏ Hàng Thành Công , Thêm Mới Sản Phẩm Thành Công";
+                result.put("success", success);
+            }catch (DataIntegrityViolationException e){
+                throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+            }
+        }else {
+            String cartId = cartInfoDTOOptional.get().getId();
+            String productId = productDTOOptional.get().getId();
+            Optional<CartItemDTO> cartItemDTO = cartItemService.findCartItemDTOByCartIdAndProductId(Long.parseLong(cartId),Long.parseLong(productId));
+
+            if (!cartItemDTO.isPresent()) {
+
+                cartItem.setPrice(new BigDecimal(Long.parseLong(productDTOOptional.get().getPrice())));
+                cartItem.setQuantity(Integer.parseInt(quantity));
+                cartItem.setTitle(productDTOOptional.get().getTitle());
+                cartItem.setTotalPrice(grandTotal);
+                cartItem.setProduct(productDTOOptional.get().toProduct());
+                cart = cartInfoDTOOptional.get().toCart();
+                cartItem.setCart(cart);
+                cart.setGrandTotal(cart.getGrandTotal().add(grandTotal));
+                try{
+                    cartService.addNewProductByCart(cart,cartItem);
+                    success ="Thêm Mới Sản Phẩm Thành Công";
+                    result.put("success", success);
+                }catch (DataIntegrityViolationException e){
+                    throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                }
+                return new ResponseEntity<>(result,HttpStatus.CREATED);
+            }else {
+                cartItem = cartItemDTO.get().toCartItem();
+                cartItem.setQuantity(cartItem.getQuantity() + Integer.parseInt(quantity));
+                cartItem.setTotalPrice(cartItem.getTotalPrice().add(grandTotal));
+                cart = cartInfoDTOOptional.get().toCart();
+                cart.setGrandTotal(cart.getGrandTotal().add(grandTotal));
+                try{
+                    cartService.updateProductByCart(cart,cartItem);
+                    success = "Cập Nhập Sản Phẩm Thành Công";
+                    result.put("success", success);
+                }catch (DataIntegrityViolationException e){
+                    throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                }
+            }
+        }
+        return new ResponseEntity<>(result,HttpStatus.CREATED);
     }
 
     @PostMapping("/add")

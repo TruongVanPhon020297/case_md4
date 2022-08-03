@@ -26,6 +26,7 @@
             getAllProduct : App.BASER_URL + "products/",
             doAddCart : App.BASER_URL + "carts/add",
             getAllCartItem : App.BASER_URL + "carts/",
+            doReduceCart : App.BASER_URL + "carts/reduce"
         },
         elements : {
             locationRegion : {}
@@ -41,6 +42,10 @@
 
     page.dialogs.elements.modalProductInfo = $('.show--info--product');
     page.elements.btnShowCartInfo = $('.show_cart');
+    page.elements.cartInfoContent = $('.cart--info--content');
+    page.elements.cartInfoGrandTotal = $('.cart--info--total span');
+    page.dialogs.elements.modalCart = $('.cart');
+
 
     let product = new Product();
 
@@ -122,9 +127,6 @@
         $('#icon_close_cart').on('click',function() {
             $('.cart').removeClass('show').addClass('hide');
         })
-        // $('.show_cart').on('click',function(){
-        //     $('.cart').removeClass('hide').addClass('show');
-        // })
         $('.content--product--top h4').on('click',function(){
             $('.show--info--product').removeClass('hide').addClass('show');
         })
@@ -137,41 +139,7 @@
     }
 
     function handleClickQuantity() {
-        $(document).ready(function(){
-            $("body").scroll(function(){
-                console.log('a');
-            });
-        });
-        $('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.quantity input');
-        $('.quantity').each(function() {
-            var spinner = $(this),
-                input = spinner.find('input[type="number"]'),
-                btnUp = spinner.find('.quantity-up'),
-                btnDown = spinner.find('.quantity-down'),
-                min = input.attr('min'),
-                max = input.attr('max');
-
-            btnUp.click(function() {
-                var oldValue = parseFloat(input.val());
-                if (oldValue >= max) {
-                    var newVal = oldValue;
-                } else {
-                    var newVal = oldValue + 1;
-                }
-                spinner.find("input").val(newVal);
-                spinner.find("input").trigger("change");
-                btnDown.click(function() {
-                    var oldValue = parseFloat(input.val());
-                    if (oldValue <= min) {
-                        var newVal = oldValue;
-                    } else {
-                        var newVal = oldValue - 1;
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-            });
-        });
+        page.commands.reduce();
     }
 
     $(()=>{
@@ -227,8 +195,8 @@
                 "url": page.url.getAllCartItem + userId,
             })
             .done((data) => {
-                $('.cart--info--content').html("");
-                $('.cart--info--total span').html("");
+                page.elements.cartInfoContent.html("");
+                page.elements.cartInfoGrandTotal.html("");
                 let grandTotal = 0;
                 $.each(data, (i, item) => {
                     cartItem = item;
@@ -236,15 +204,51 @@
                     grandTotal = App.formatNumberSpace(cartItem.cart.grandTotal);
                     addBlockProductCart();
                 });
-                $('.cart--info--total span').text(`${grandTotal} đ`);
+                page.elements.cartInfoGrandTotal.text(`${grandTotal} đ`);
                 handleClickQuantity();
-                $('.cart').removeClass('hide').addClass('show');
+                page.dialogs.elements.modalCart.removeClass('hide').addClass('show');
             })
             .fail((jqXHR) => {
-                console.log(jqXHR);
+                if (jqXHR.status === 401)  {
+                    App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                }else {
+
+                }
             })
         })
     }
+    page.commands.reduce = () => {
+        $('.quantity-up').on("click",function (){
+            let productId = $(this).data("id");
+            let userId = $('.header--right a span').attr('id');
+            let quantity = $(`.input_${productId}`).val();
+            let reduceValue = Number(quantity) + 1;
+            let cart = new Cart();
+
+            if ($.isNumeric(quantity)) {
+                $(`.input_${productId}`).val(reduceValue);
+                cart.userId = userId;
+                cart.productId = productId;
+                cart.quantity = 1;
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "type": "POST",
+                    "url": page.url.doReduceCart,
+                    "data": JSON.stringify(cart),
+                })
+                .done((data) => {
+                    console.log(data);
+                })
+                .fail((jqXHR) => {
+                    console.log(jqXHR);
+                })
+            }
+        })
+    }
+
 </script>
 </body>
 </html>
