@@ -173,11 +173,95 @@ public class CartRestController {
                 cart = cartInfoDTOOptional.get().toCart();
                 cart.setGrandTotal(cart.getGrandTotal().add(grandTotal));
                 try{
-                    cartService.updateProductByCart(cart,cartItem);
+                    CartItem cartItemReduce = cartService.updateProductByCart(cart,cartItem);
                     success = "Cập Nhập Sản Phẩm Thành Công";
                     result.put("success", success);
+                    result.put("cartItem",cartItemReduce.toCartItemDTO());
                 }catch (DataIntegrityViolationException e){
                     throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                }
+            }
+        }
+        return new ResponseEntity<>(result,HttpStatus.CREATED);
+    }
+
+
+    @PostMapping("/increase")
+    public ResponseEntity<?> doIncreaseCart(@Valid @RequestBody CartDTO cartDTO,BindingResult bindingResult){
+
+        new CartDTO().validate(cartDTO, bindingResult);
+
+        if (bindingResult.hasFieldErrors()){
+            return appUtil.mapErrorToResponse(bindingResult);
+        }
+
+        Optional<UserDTO> userDTOOptional = userService.findUserDTOById(Long.parseLong(cartDTO.getUserId()));
+
+        if (!userDTOOptional.isPresent()){
+            throw new ResourceNotFoundException("Không Tìm Thấy Người Dùng");
+        }
+
+        UserDTO userDTOLogin = getUserDTO();
+
+        if (!(userDTOOptional.get().getId()).equals(userDTOLogin.getId())){
+            throw new ResourceNotFoundException("Không Phải Người Dùng Đang Đăng Nhập Thao Tác");
+        }
+
+        Optional<ProductDTO> productDTOOptional = productService.getProductDTOById(Long.parseLong(cartDTO.getProductId()));
+
+        if (!productDTOOptional.isPresent()) {
+            throw new ResourceNotFoundException("Không Tìm Thấy Sản Phẩm");
+        }
+
+        String userId = userDTOOptional.get().getId();
+
+        Optional<CartInfoDTO> cartInfoDTOOptional = cartService.findCartInfoDTOByUserId(Long.parseLong(userId));
+
+        Map<String, Object> result = new HashMap<>();
+
+        String success;
+
+        if (!cartInfoDTOOptional.isPresent()) {
+            success = "Người Dùng Chưa Có Giỏ Hàng";
+            result.put("success",success);
+            return new ResponseEntity<>(result,HttpStatus.OK);
+        }else {
+            String cartId = cartInfoDTOOptional.get().getId();
+            String productId = productDTOOptional.get().getId();
+            Optional<CartItemDTO> cartItemDTO = cartItemService.findCartItemDTOByCartIdAndProductId(Long.parseLong(cartId),Long.parseLong(productId));
+            if (!cartItemDTO.isPresent()) {
+                success = "Sản Phẩm Chưa Tồn Tại Trong Giỏ Hàng";
+                result.put("success",success);
+                return new ResponseEntity<>(result,HttpStatus.OK);
+            }else {
+                if (Integer.parseInt(cartItemDTO.get().getQuantity()) == 1){
+                    success = "Số Lượng Tối Thiểu Là 1 Sản Phẩm";
+                    result.put("success",success);
+                    return new ResponseEntity<>(result,HttpStatus.OK);
+                }else {
+                    String quantity = "1";
+                    BigDecimal price = new BigDecimal(Long.parseLong(productDTOOptional.get().getPrice()));
+                    BigDecimal grandTotal = price.multiply(new BigDecimal(Long.parseLong(quantity)));
+
+
+                    CartItem cartItem = new CartItem();
+                    Cart cart = new Cart();
+
+                    cartItem = cartItemDTO.get().toCartItem();
+                    cartItem.setQuantity(cartItem.getQuantity() - Integer.parseInt(quantity));
+                    cartItem.setTotalPrice(cartItem.getTotalPrice().subtract(grandTotal));
+                    cart = cartInfoDTOOptional.get().toCart();
+                    cart.setGrandTotal(cart.getGrandTotal().subtract(grandTotal));
+
+                    try{
+                        CartItem cartItemIncrease = cartService.updateProductByCart(cart,cartItem);
+                        success = new String("Cập Nhập Sản Phẩm Thành Công");
+                        result.put("success", success);
+                        result.put("cartItem",cartItemIncrease.toCartItemDTO());
+
+                    }catch (DataIntegrityViolationException e){
+                        throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                    }
                 }
             }
         }

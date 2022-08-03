@@ -26,7 +26,8 @@
             getAllProduct : App.BASER_URL + "products/",
             doAddCart : App.BASER_URL + "carts/add",
             getAllCartItem : App.BASER_URL + "carts/",
-            doReduceCart : App.BASER_URL + "carts/reduce"
+            doReduceCart : App.BASER_URL + "carts/reduce",
+            doIncreaseCart : App.BASER_URL + "carts/increase"
         },
         elements : {
             locationRegion : {}
@@ -140,6 +141,7 @@
 
     function handleClickQuantity() {
         page.commands.reduce();
+        page.commands.increase();
     }
 
     $(()=>{
@@ -195,18 +197,23 @@
                 "url": page.url.getAllCartItem + userId,
             })
             .done((data) => {
-                page.elements.cartInfoContent.html("");
-                page.elements.cartInfoGrandTotal.html("");
-                let grandTotal = 0;
-                $.each(data, (i, item) => {
-                    cartItem = item;
-                    cartItem.price = App.formatNumberSpace(cartItem.price);
-                    grandTotal = App.formatNumberSpace(cartItem.cart.grandTotal);
-                    addBlockProductCart();
-                });
-                page.elements.cartInfoGrandTotal.text(`${grandTotal} đ`);
-                handleClickQuantity();
-                page.dialogs.elements.modalCart.removeClass('hide').addClass('show');
+                console.log(data);
+                if (data.noCart){
+                    App.IziToast.showSuccessAlert(data.noCart);
+                }else {
+                    page.elements.cartInfoContent.html("");
+                    page.elements.cartInfoGrandTotal.html("");
+                    let grandTotal = 0;
+                    $.each(data, (i, item) => {
+                        cartItem = item;
+                        cartItem.price = App.formatNumberSpace(cartItem.price);
+                        grandTotal = App.formatNumberSpace(cartItem.cart.grandTotal);
+                        addBlockProductCart();
+                    });
+                    page.elements.cartInfoGrandTotal.text(`${grandTotal} đ`);
+                    handleClickQuantity();
+                    page.dialogs.elements.modalCart.removeClass('hide').addClass('show');
+                }
             })
             .fail((jqXHR) => {
                 if (jqXHR.status === 401)  {
@@ -219,6 +226,7 @@
     }
     page.commands.reduce = () => {
         $('.quantity-up').on("click",function (){
+            let cartItemReduce = new CartItem();
             let productId = $(this).data("id");
             let userId = $('.header--right a span').attr('id');
             let quantity = $(`.input_${productId}`).val();
@@ -226,7 +234,6 @@
             let cart = new Cart();
 
             if ($.isNumeric(quantity)) {
-                $(`.input_${productId}`).val(reduceValue);
                 cart.userId = userId;
                 cart.productId = productId;
                 cart.quantity = 1;
@@ -240,10 +247,55 @@
                     "data": JSON.stringify(cart),
                 })
                 .done((data) => {
-                    console.log(data);
+                    cartItemReduce = data.cartItem;
+                    $(`.input_${productId}`).val(reduceValue);
+                    page.elements.cartInfoGrandTotal.text(`${cartItemReduce.cart.grandTotal} đ`);
+                    App.IziToast.showSuccessAlert(data.success);
                 })
                 .fail((jqXHR) => {
-                    console.log(jqXHR);
+                    if (jqXHR.status === 401)  {
+                        App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                    }else {
+
+                    }
+                })
+            }
+        })
+    }
+    page.commands.increase = () => {
+        $('.quantity-down').on('click',function (){
+            let cartItemIncrease = new CartItem();
+            let productId = $(this).data("id");
+            let userId = $('.header--right a span').attr('id');
+            let quantity = $(`.input_${productId}`).val();
+            let reduceValue = Number(quantity) - 1;
+            let cart = new Cart();
+
+            if ($.isNumeric(quantity)) {
+                cart.userId = userId;
+                cart.productId = productId;
+                cart.quantity = 1;
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "type": "POST",
+                    "url": page.url.doIncreaseCart,
+                    "data": JSON.stringify(cart),
+                })
+                .done((data) => {
+                    cartItemIncrease = data.cartItem;
+                    $(`.input_${productId}`).val(reduceValue);
+                    page.elements.cartInfoGrandTotal.text(`${cartItemIncrease.cart.grandTotal} đ`);
+                    App.IziToast.showSuccessAlert(data.success);
+                })
+                .fail((jqXHR) => {
+                    if (jqXHR.status === 401)  {
+                        App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                    }else {
+                        $(`.input_${productId}`).val("1");
+                    }
                 })
             }
         })
