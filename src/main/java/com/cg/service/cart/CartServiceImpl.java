@@ -75,5 +75,11 @@ public class CartServiceImpl implements CartService{
         return cartItemNew;
     }
 
+    @Override
+    public CartInfoDTO doRemoveCartItem(Cart cart, Long cartItemId) {
+        cartItemRepository.deleteById(cartItemId);
+        Cart cartNew = cartRepository.save(cart);
+        return cartNew.toCartInfoDTO();
+    }
 
 }

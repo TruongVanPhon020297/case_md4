@@ -16,4 +16,5 @@ public interface CartService extends IGeneralService<Cart> {
     CartItem addNewCart(Cart cart,CartItem cartItem);
     CartItem addNewProductByCart(Cart cart,CartItem cartItem);
     CartItem updateProductByCart(Cart cart, CartItem cartItem);
+    CartInfoDTO doRemoveCartItem(Cart cart,Long cartItemId);
 }

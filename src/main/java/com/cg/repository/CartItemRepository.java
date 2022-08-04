@@ -16,4 +16,5 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     @Query("SELECT NEW com.cg.model.dto.CartItemDTO (ci.id,ci.title,ci.price,ci.quantity,ci.totalPrice,ci.product,ci.cart) FROM CartItem ci WHERE ci.cart.id = ?1")
     List<CartItemDTO> findAllCartItemByCartId(Long cartId);
+
 }

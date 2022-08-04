@@ -27,7 +27,8 @@
             doAddCart : App.BASER_URL + "carts/add",
             getAllCartItem : App.BASER_URL + "carts/",
             doReduceCart : App.BASER_URL + "carts/reduce",
-            doIncreaseCart : App.BASER_URL + "carts/increase"
+            doIncreaseCart : App.BASER_URL + "carts/increase",
+            doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item"
         },
         elements : {
             locationRegion : {}
@@ -216,6 +217,7 @@
                     });
                     page.elements.cartInfoGrandTotal.text(`${grandTotal} đ`);
                     handleClickQuantity();
+                    page.commands.removeProductByCart();
                     page.dialogs.elements.modalCart.removeClass('hide').addClass('show');
                 }
             })
@@ -375,6 +377,36 @@
             }else{
                 $(`.input_quantity_${productId}`).val("1");
             }
+        })
+    }
+
+    page.commands.removeProductByCart = () => {
+        $('.cart--info--content--product a').on("click",function (){
+            let productId = $(this).data("id");
+            let userId = $('.header--right a span').attr('id');
+
+            cart.userId = userId;
+            cart.productId = productId;
+            cart.quantity = 0;
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "POST",
+                "url": page.url.doRemoveCartItem,
+                "data": JSON.stringify(cart),
+            })
+            .done((data) => {
+                $(`.cart--product--${productId}`).remove();
+                page.elements.cartInfoGrandTotal.text(`${data.cartInfo.grandTotal} đ`);
+                App.IziToast.showSuccessAlert(data.success);
+            })
+            .fail((jqXHR) => {
+                console.log("fail");
+            })
+
         })
     }
 

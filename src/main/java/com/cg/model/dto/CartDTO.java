@@ -40,7 +40,7 @@ public class CartDTO implements Validator {
         }
 
         if ((productIdCheck.trim().isEmpty())){
-            errors.rejectValue("productIdC", "productId.isEmpty", "Vui Lòng Cung Cấp Id Sản Phẩm");
+            errors.rejectValue("productId", "productId.isEmpty", "Vui Lòng Cung Cấp Id Sản Phẩm");
             return;
         }
 
