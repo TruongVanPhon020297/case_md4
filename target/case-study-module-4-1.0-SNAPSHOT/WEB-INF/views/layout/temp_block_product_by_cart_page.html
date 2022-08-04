@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="temp_block_product_by_cart_page">
+
+    <textarea id="tempBlockProductByCartPage" class="hide">
+         <div class="content--cart--product--list--first cart--product--{5}">
+            <div class="content--cart--product--list--first--left">
+                <img src="assets/img/{0}" alt="" width="70" height="70">
+            </div>
+            <div class="content--cart--product--list--first--center">
+                <h5>{1}</h5>
+                <span>Giá : </span>
+                <span>{2} đ</span>
+            </div>
+            <div class="content--cart--product--list--first--right">
+                <span>Tổng : </span>
+                <span class = "total--price">{3} đ</span>
+                <div class="quantity">
+                    <input type="number" min="1" max="9" step="1" value="{4}" class = "input_{5}">
+                    <div class="quantity-nav">
+                        <div class="quantity-button quantity-up" data-id = "{5}">+</div>
+                        <div class="quantity-button quantity-down" data-id = "{5}">-</div>
+                    </div>
+                </div>
+            </div>
+            <a href="javascript: void(0);" data-id = "{5}"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+    </textarea>
+
+</th:block>

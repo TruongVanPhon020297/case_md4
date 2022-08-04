@@ -1,5 +1,5 @@
 .container .content--cart {
-  width: 70%;
+  width: 90%;
   height: auto;
   background: red;
   margin: 0 auto;
@@ -10,7 +10,7 @@
   height: auto;
   float: left;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding-right: 25px;
 }
 
@@ -52,7 +52,7 @@
   height: auto;
   float: left;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .container .content--cart .content--cart--product .content--cart--product--list .content--cart--product--list--first .content--cart--product--list--first--left img {
@@ -72,16 +72,24 @@
   font-size: 15px;
 }
 
+.container .content--cart .content--cart--product .content--cart--product--list .content--cart--product--list--first .content--cart--product--list--first--center span {
+  font-weight: bold;
+}
+
 .container .content--cart .content--cart--product .content--cart--product--list .content--cart--product--list--first .content--cart--product--list--first--right {
   width: 30%;
   float: left;
 }
 
 .container .content--cart .content--cart--product .content--cart--product--list .content--cart--product--list--first .content--cart--product--list--first--right span {
+  margin-top: 10px;
   display: block;
-  margin-top: 40px;
-  margin-bottom: 20px;
   font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.container .content--cart .content--cart--product .content--cart--product--list .content--cart--product--list--first .content--cart--product--list--first--right span:first-child {
+  margin-top: 40px;
 }
 
 .container .content--cart .content--cart--product .content--cart--product--list .content--cart--product--list--first .content--cart--product--list--first--right .quantity {
@@ -166,6 +174,10 @@
   font-size: 20px;
 }
 
+.container .content--cart .content--cart--money .content--cart--money--center {
+  height: 345px;
+}
+
 .container .content--cart .content--cart--money .content--cart--money--center h4 {
   display: inline-block;
 }
@@ -179,11 +191,14 @@
 }
 
 .container .content--cart .content--cart--money .content--cart--money--center .content--cart--money--center--form h4 {
-  margin-top: 0;
+  width: 100%;
+  clear: both;
+  margin-top: 15px;
 }
 
 .container .content--cart .content--cart--money .content--cart--money--center .content--cart--money--center--form .content--cart--money--center--form--info {
-  width: 100%;
+  width: 50%;
+  float: left;
 }
 
 .container .content--cart .content--cart--money .content--cart--money--center .content--cart--money--center--form .content--cart--money--center--form--info label {
@@ -192,8 +207,8 @@
 
 .container .content--cart .content--cart--money .content--cart--money--center .content--cart--money--center--form .content--cart--money--center--form--info select {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   width: 250px;
   margin-top: 27px;
   padding: 0 30px 0 10px;

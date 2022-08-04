@@ -69,6 +69,7 @@ public class HomeController {
     public ModelAndView showCartPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/cart");
+        modelAndView.addObject("userDTO", getUserDTO());
         return modelAndView;
     }
 }

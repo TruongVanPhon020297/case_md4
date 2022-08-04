@@ -12,86 +12,7 @@
         <div class="content--cart--product">
             <h3>Giỏ Hàng Của Tôi</h3>
             <div class="content--cart--product--list">
-                <div class="content--cart--product--list--first">
-                    <div class="content--cart--product--list--first--left">
-                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
-                    </div>
-                    <div class="content--cart--product--list--first--center">
-                        <h5>Tôi Là Sản Phẩm</h5>
-                        <span>300.000đ</span>
-                    </div>
-                    <div class="content--cart--product--list--first--right">
-                        <span>300.000đ</span>
-                        <div class="quantity">
-                            <input type="number" min="1" max="9" step="1" value="1">
-                            <div class="quantity-nav">
-                                <div class="quantity-button quantity-up">+</div>
-                                <div class="quantity-button quantity-down">-</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                </div>
-                <div class="content--cart--product--list--first">
-                    <div class="content--cart--product--list--first--left">
-                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
-                    </div>
-                    <div class="content--cart--product--list--first--center">
-                        <h5>Tôi Là Sản Phẩm</h5>
-                        <span>300.000đ</span>
-                    </div>
-                    <div class="content--cart--product--list--first--right">
-                        <span>300.000đ</span>
-                        <div class="quantity">
-                            <input type="number" min="1" max="9" step="1" value="1">
-                            <div class="quantity-nav">
-                                <div class="quantity-button quantity-up">+</div>
-                                <div class="quantity-button quantity-down">-</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                </div>
-                <div class="content--cart--product--list--first">
-                    <div class="content--cart--product--list--first--left">
-                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
-                    </div>
-                    <div class="content--cart--product--list--first--center">
-                        <h5>Tôi Là Sản Phẩm</h5>
-                        <span>300.000đ</span>
-                    </div>
-                    <div class="content--cart--product--list--first--right">
-                        <span>300.000đ</span>
-                        <div class="quantity">
-                            <input type="number" min="1" max="9" step="1" value="1">
-                            <div class="quantity-nav">
-                                <div class="quantity-button quantity-up">+</div>
-                                <div class="quantity-button quantity-down">-</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                </div>
-                <div class="content--cart--product--list--first">
-                    <div class="content--cart--product--list--first--left">
-                        <img src="assets/img/0d3381fb-5472-42f2-84f7-126779abe4f6.jpg" alt="" width="70" height="70">
-                    </div>
-                    <div class="content--cart--product--list--first--center">
-                        <h5>Tôi Là Sản Phẩm</h5>
-                        <span>300.000đ</span>
-                    </div>
-                    <div class="content--cart--product--list--first--right">
-                        <span>300.000đ</span>
-                        <div class="quantity">
-                            <input type="number" min="1" max="9" step="1" value="1">
-                            <div class="quantity-nav">
-                                <div class="quantity-button quantity-up">+</div>
-                                <div class="quantity-button quantity-down">-</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
-                </div>
+
             </div>
         </div>
         <div class="content--cart--money">
@@ -99,44 +20,40 @@
                 <h4>Tóm Tắt Đơn Hàng</h4>
             </div>
             <div class="content--cart--money--center">
-                <h4>Tổng Từng Phần : </h4>
-                <span>1.000.000đ</span>
                 <form action="" class="content--cart--money--center--form">
                     <h4>Chọn Địa Chỉ Giao Hàng : </h4>
                     <div class="content--cart--money--center--form--info">
                         <label>Tỉnh / TP : </label>
-                        <select name="">
-                            <option value="">Thừa Thiên Huế</option>
-                            <option value="">Đà Nẵng</option>
-                            <option value="">Hồ Chí Minh</option>
+                        <select name="" id="province--delivery">
+
                         </select>
                     </div>
                     <div class="content--cart--money--center--form--info">
-                        <label >Huyện / Phường : </label>
-                        <select name="" >
-                            <option value="">Thừa Thiên Huế</option>
-                            <option value="">Đà Nẵng</option>
-                            <option value="">Hồ Chí Minh</option>
+                        <label>Huyện / Phường : </label>
+                        <select name="" id="district--delivery">
+
+                        </select>
+                    </div>
+                    <div class="content--cart--money--center--form--info" style="margin-top: 14px;">
+                        <label>Xã / Thị Trấn : </label>
+                        <select name="" id="ward--delivery">
+
                         </select>
                     </div>
                     <div class="content--cart--money--center--form--info">
-                        <label >Xã / Thị Trấn : </label>
-                        <select name="" >
-                            <option value="">Thừa Thiên Huế</option>
-                            <option value="">Đà Nẵng</option>
-                            <option value="">Hồ Chí Minh</option>
-                        </select>
+                        <label>Địa Chỉ : </label>
+                        <input type="text" placeholder="Địa Chỉ" id="address--delivery">
                     </div>
-                    <div class="content--cart--money--center--form--info">
-                        <label >Địa Chỉ : </label>
-                        <input type="text" placeholder="Địa Chỉ">
+                    <div class="content--cart--money--center--form--info" style="float: inherit;">
+                        <label>Ngày Giao Hàng : </label>
+                        <input type="date" id="delivery--date">
                     </div>
                 </form>
             </div>
             <div class="content--cart--money--bottom">
-                <h4>Tổng : </h4>
-                <span>1.000.000đ</span>
-                <a href="#">Thanh Toán</a>
+                <h4>Tổng Tiền Đơn Hàng : </h4>
+                <span></span>
+                <a href="#">Đặt Hàng</a>
             </div>
         </div>
     </div>
@@ -144,6 +61,312 @@
     <th:block th:replace="/layout/footer :: footer" />
 </div>
 <th:block th:replace="/layout/cart_modal :: cart_modal" />
+<th:block th:replace="/layout/temp_block_product_by_cart_page :: temp_block_product_by_cart_page" />
 <th:block th:replace="/layout/script :: script" />
+<script>
+    let page = {
+        url : {
+            getAllProvince : "https://vapi.vnappmob.com/api/province/",
+            getAllDistrict : "https://vapi.vnappmob.com/api/province/district/",
+            getAllWard : "https://vapi.vnappmob.com/api/province/ward/",
+            getAllCartItem : App.BASER_URL + "carts/",
+            doReduceCart : App.BASER_URL + "carts/reduce",
+            doIncreaseCart : App.BASER_URL + "carts/increase",
+            doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item"
+        },
+        elements : {
+            locationRegion : {}
+        },
+        loadData : {},
+        commands : {},
+        dialogs : {
+            elements: {},
+            commands: {}
+        },
+        initializeControllEvents : {}
+    }
+
+    page.elements.locationRegion.province = $('#province--delivery');
+    page.elements.locationRegion.district = $('#district--delivery');
+    page.elements.locationRegion.ward = $('#ward--delivery');
+    page.elements.locationRegion.address = $('#address--delivery');
+    page.elements.deliveryDate = $('#delivery--date');
+    page.elements.cartInfoGrandTotal = $('.content--cart--money--bottom span');
+    page.elements.totalPrice = $('.total--price');
+
+    page.commands.drawProvinces = ()=> {
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url" : page.url.getAllProvince
+        })
+        .done((data) => {
+            if (data.results.length === 0) {
+                App.IziToast.showErrorAlert('Không Thể Tải Danh Sách Tỉnh - Thành Phố');
+            }
+            else {
+                $.each(data.results, (i, item) => {
+                    let str = `<option value="${item.province_id}">${item.province_name}</option>`;
+
+                    $('#province--delivery').prepend(str);
+                })
+            }
+        })
+    }
+    page.commands.drawDistricts = (provinceId)=>{
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url" : page.url.getAllDistrict+ provinceId
+        })
+        .done((data) => {
+            $('#district--delivery').html('');
+
+            if (data.results.length === 0) {
+                App.IziToast.showErrorAlert('Không Thể Tải Danh Sách Quận - Phường - Huyện');
+            }
+            else {
+                $.each(data.results, (i, item) => {
+                    let str = `<option value="${item.district_id}">${item.district_name}</option>`;
+
+                    $('#district--delivery').prepend(str);
+                })
+            }
+        });
+    }
+    page.commands.drawWards = (districtId) => {
+        return $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": page.url.getAllWard + districtId,
+        })
+            .done((data) => {
+                $('#ward--delivery').html('');
+                if (data.results.length === 0) {
+                    App.IziToast.showErrorAlert('Không Thể Tải Danh Sách Xã - Thị Trấn');
+                }
+                else {
+                    $.each(data.results, (i, item) => {
+                        let str = `<option value="${item.ward_id}">${item.ward_name}</option>`;
+
+                        $('#ward--delivery').prepend(str);
+                    })
+                }
+            });
+    }
+    page.commands.drawProvinces().then(() => {
+        let provinceId = $('#province--delivery').val();
+        page.commands.drawDistricts(provinceId).then(() => {
+            let districtId = $('#district--delivery').val();
+            page.commands.drawWards(districtId);
+        });
+    });
+    page.commands.provinceChange = () => {
+        page.elements.locationRegion.province.on('change', () => {
+            let provinceId =  page.elements.locationRegion.province.val();
+
+            page.commands.drawDistricts(provinceId).then(() => {
+                let districtId = $('#district--delivery').val();
+                page.commands.drawWards(districtId);
+            });
+        });
+    }
+    page.commands.districtChange = () => {
+        page.elements.locationRegion.district.on('change', () => {
+            let districtId =  page.elements.locationRegion.district.val();
+            page.commands.drawWards(districtId);
+        });
+    }
+
+    let tempBlockProductByCartPage = $.validator.format($.trim($('#tempBlockProductByCartPage').val().toString()));
+
+    function addBlockProductByCartPage() {
+        $('.content--cart--product--list').prepend($(tempBlockProductByCartPage(cartItem.product.urlImage,cartItem.title,cartItem.price,cartItem.totalPrice,cartItem.quantity,cartItem.product.id)));
+    }
+
+
+    page.initializeControllEvents = () => {
+        page.commands.provinceChange();
+        page.commands.districtChange();
+    }
+
+    $(()=>{
+        page.initializeControllEvents();
+        page.commands.loadCart();
+    })
+
+    page.commands.loadCart = () => {
+        let userId = $('.header--right a span').attr('id');
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "GET",
+            "url": page.url.getAllCartItem + userId,
+        })
+        .done((data) => {
+            if (data.noCart){
+                App.IziToast.showSuccessAlert(data.noCart);
+            }else {
+                let grandTotal = 0;
+                $.each(data, (i, item) => {
+                    cartItem = item;
+                    cartItem.price = App.formatNumberSpace(cartItem.price);
+                    grandTotal = App.formatNumberSpace(cartItem.cart.grandTotal);
+                    addBlockProductByCartPage();
+                });
+                page.elements.cartInfoGrandTotal.text(`${grandTotal} đ`);
+            }
+            page.commands.reduce();
+            page.commands.increase();
+            page.commands.removeProductByCart();
+        })
+        .fail((jqXHR) => {
+            if (jqXHR.status === 401)  {
+                App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+            }else {
+
+            }
+        })
+    }
+
+    page.commands.reduce = () => {
+        $('.quantity-up').on("click",function (){
+            let cartItemReduce = new CartItem();
+            let productId = $(this).data("id");
+            let userId = $('.header--right a span').attr('id');
+            let quantity = $(`.input_${productId}`).val();
+            let reduceValue = Number(quantity) + 1;
+            let cart = new Cart();
+
+            if ($.isNumeric(quantity)) {
+                cart.userId = userId;
+                cart.productId = productId;
+                cart.quantity = 1;
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "type": "POST",
+                    "url": page.url.doReduceCart,
+                    "data": JSON.stringify(cart),
+                })
+                .done((data) => {
+                    cartItemReduce = data.cartItem;
+                    $(`.input_${productId}`).val(reduceValue);
+                    page.elements.cartInfoGrandTotal.text(`${cartItemReduce.cart.grandTotal} đ`);
+                    page.elements.totalPrice.text(`${cartItemReduce.totalPrice} đ`);
+                    App.IziToast.showSuccessAlert(data.success);
+                })
+                .fail((jqXHR) => {
+                    if (jqXHR.status === 401)  {
+                        App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                    }else {
+
+                    }
+                })
+            }
+        })
+    }
+
+    page.commands.increase = () => {
+        $('.quantity-down').on('click',function (){
+            let cartItemIncrease = new CartItem();
+            let productId = $(this).data("id");
+            let userId = $('.header--right a span').attr('id');
+            let quantity = $(`.input_${productId}`).val();
+            let reduceValue = Number(quantity) - 1;
+            let cart = new Cart();
+
+            if ($.isNumeric(quantity)) {
+                cart.userId = userId;
+                cart.productId = productId;
+                cart.quantity = 1;
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "type": "POST",
+                    "url": page.url.doIncreaseCart,
+                    "data": JSON.stringify(cart),
+                })
+                .done((data) => {
+                    cartItemIncrease = data.cartItem;
+                    $(`.input_${productId}`).val(reduceValue);
+                    page.elements.cartInfoGrandTotal.text(`${cartItemIncrease.cart.grandTotal} đ`);
+                    page.elements.totalPrice.text(`${cartItemReduce.totalPrice} đ`);
+                    App.IziToast.showSuccessAlert(data.success);
+                })
+                .fail((jqXHR) => {
+                    if (jqXHR.status === 401)  {
+                        App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                    }else {
+                        if(jqXHR.responseJSON.message){
+                            let msg = jqXHR.responseJSON.message;
+                            App.IziToast.showErrorAlert(msg);
+                        }else if(jqXHR.responseJSON){
+                            $.each(jqXHR.responseJSON,(key,item) =>{
+                                App.IziToast.showErrorAlert(item);
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    page.commands.removeProductByCart = () => {
+        $('.cart--info--content--product a').on("click",function (){
+            let productId = $(this).data("id");
+            let userId = $('.header--right a span').attr('id');
+
+            cart.userId = userId;
+            cart.productId = productId;
+            cart.quantity = 0;
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "POST",
+                "url": page.url.doRemoveCartItem,
+                "data": JSON.stringify(cart),
+            })
+            .done((data) => {
+                $(`.cart--product--${productId}`).remove();
+                page.elements.cartInfoGrandTotal.text(`${data.cartInfo.grandTotal} đ`);
+                App.IziToast.showSuccessAlert(data.success);
+            })
+            .fail((jqXHR) => {
+                if (jqXHR.status === 401)  {
+                    App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                }else {
+                    if(jqXHR.responseJSON.message){
+                        let msg = jqXHR.responseJSON.message;
+                        App.IziToast.showErrorAlert(msg);
+                    }else if(jqXHR.responseJSON){
+                        $.each(jqXHR.responseJSON,(key,item) =>{
+                            App.IziToast.showErrorAlert(item);
+                        })
+                    }
+                }
+            })
+        })
+    }
+
+</script>
 </body>
 </html>
