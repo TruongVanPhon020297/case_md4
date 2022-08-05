@@ -29,9 +29,9 @@ public class Order extends BaseEntities{
     @Column(name = "order_date")
     private Date orderDate;
 
-    @CreationTimestamp
+
     @Column(name = "delivery_date")
-    private Date deliveryDate;
+    private String deliveryDate;
 
     @Digits(integer = 12, fraction = 0)
     @Column(name = "grand_total")

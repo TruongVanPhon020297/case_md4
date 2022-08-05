@@ -1,13 +1,17 @@
 package com.cg.controller.rest;
 
+import com.cg.exception.DataInputException;
 import com.cg.exception.ResourceNotFoundException;
 import com.cg.model.dto.*;
 import com.cg.service.CartItem.CartItemService;
 import com.cg.service.cart.CartService;
+import com.cg.service.order.OrderService;
 import com.cg.service.product.ProductService;
 import com.cg.service.user.UserService;
 import com.cg.util.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 public class OrderRestController {
 
     @Autowired
@@ -40,6 +44,8 @@ public class OrderRestController {
     @Autowired
     CartItemService cartItemService;
 
+    @Autowired
+    OrderService orderService;
     @Autowired
     private AppUtil appUtil;
 
@@ -58,7 +64,7 @@ public class OrderRestController {
 
     @PostMapping("/add")
     public ResponseEntity<?> doAddOrder(@Valid @RequestBody OrderDTO orderDTO, BindingResult bindingResult){
-        new CartDTO().validate(orderDTO, bindingResult);
+        new OrderDTO().validate(orderDTO, bindingResult);
 
         if (bindingResult.hasFieldErrors()){
             return appUtil.mapErrorToResponse(bindingResult);
@@ -91,9 +97,15 @@ public class OrderRestController {
             if (cartItemDTOList.isEmpty()) {
                 throw new ResourceNotFoundException("Người Dùng Chưa Có Sản Phẩm Trong Giỏ Hàng Để Đặt Hàng");
             }else {
-
+                try{
+                    orderService.doCreateOrder(orderDTO,cartInfoDTOOptional.get());
+                    success = "Tạo Đơn Hàng Thành Công";
+                    result.put("success",success);
+                }catch (DataIntegrityViolationException e){
+                    throw new DataInputException("Liên Hệ Chủ Cửa Hàng Để Được Giải Quyết");
+                }
             }
         }
-        return null;
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }

@@ -128,3 +128,10 @@ class CartItem {
         this.cart = cart;
     }
 }
+class Order {
+    constructor(userId,locationRegion,deliveryDate) {
+        this.userId = userId;
+        this.locationRegion = locationRegion;
+        this.deliveryDate = deliveryDate;
+    }
+}

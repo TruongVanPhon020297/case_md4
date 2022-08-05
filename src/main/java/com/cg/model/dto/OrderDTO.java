@@ -21,7 +21,7 @@ public class OrderDTO implements Validator {
 
     private String userId;
     private LocationRegionDeliveryDTO locationRegion;
-    private Date deliveryDate;
+    private String deliveryDate;
 
     @Override
     public boolean supports(Class<?> aClass) {

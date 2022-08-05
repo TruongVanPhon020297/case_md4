@@ -53,7 +53,7 @@
             <div class="content--cart--money--bottom">
                 <h4>Tổng Tiền Đơn Hàng : </h4>
                 <span></span>
-                <a href="#">Đặt Hàng</a>
+                <a href="javascript: void(0);">Đặt Hàng</a>
             </div>
         </div>
     </div>
@@ -72,7 +72,8 @@
             getAllCartItem : App.BASER_URL + "carts/",
             doReduceCart : App.BASER_URL + "carts/reduce",
             doIncreaseCart : App.BASER_URL + "carts/increase",
-            doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item"
+            doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item",
+            doCreateOrder : App.BASER_URL + "orders/add"
         },
         elements : {
             locationRegion : {}
@@ -92,6 +93,7 @@
     page.elements.locationRegion.address = $('#address--delivery');
     page.elements.deliveryDate = $('#delivery--date');
     page.elements.cartInfoGrandTotal = $('.content--cart--money--bottom span');
+    page.elements.btnOrder = $('.content--cart--money--bottom a');
     page.commands.drawProvinces = ()=> {
         return $.ajax({
             "headers": {
@@ -229,6 +231,7 @@
             page.commands.reduce();
             page.commands.increase();
             page.commands.removeProductByCart();
+            page.commands.doCreateOrder();
         })
         .fail((jqXHR) => {
             if (jqXHR.status === 401)  {
@@ -369,6 +372,54 @@
                     }
                 }
             })
+        })
+    }
+
+    page.commands.doCreateOrder = () => {
+        page.elements.btnOrder.on('click',function (){
+            let locationRegion = new LocationRegion();
+            let order = new Order();
+            locationRegion.provinceId = page.elements.locationRegion.province.val();
+            locationRegion.provinceName = page.elements.locationRegion.province.find(":selected").text();
+            locationRegion.districtId = page.elements.locationRegion.district.val();
+            locationRegion.districtName = page.elements.locationRegion.district.find(":selected").text();
+            locationRegion.wardId =  page.elements.locationRegion.ward.val();
+            locationRegion.wardName =  page.elements.locationRegion.ward.find(":selected").text();
+            locationRegion.address =  page.elements.locationRegion.address.val();
+
+            order.userId = $('.header--right a span').attr('id');
+            order.locationRegion = locationRegion;
+            order.deliveryDate = page.elements.deliveryDate.val();
+
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "POST",
+                "url": page.url.doCreateOrder,
+                "data": JSON.stringify(order),
+            })
+                .done((data) => {
+                    App.IziToast.showSuccessAlert(data.success);
+                    $('.content--cart--product--list').html("");
+                    page.elements.locationRegion.address.val("");
+                    page.elements.cartInfoGrandTotal.text(`0 đ`);
+                })
+                .fail((jqXHR) => {
+                    if (jqXHR.status === 401)  {
+                        App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
+                    }else {
+                        if(jqXHR.responseJSON.message){
+                            let msg = jqXHR.responseJSON.message;
+                            App.IziToast.showErrorAlert(msg);
+                        }else if(jqXHR.responseJSON){
+                            $.each(jqXHR.responseJSON,(key,item) =>{
+                                App.IziToast.showErrorAlert(item);
+                            })
+                        }
+                    }
+                })
         })
     }
 
