@@ -37,12 +37,17 @@ public class Order extends BaseEntities{
     @Column(name = "grand_total")
     private BigDecimal grandTotal;
 
+    @Column(name = "is_pending",columnDefinition = "boolean default true")
+    private boolean isPending;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "order")
     private Set<OrderItem> orderItems;
+
+
 
     @OneToOne
     @JoinColumn(name = "location_region_delivery_id", nullable = false)

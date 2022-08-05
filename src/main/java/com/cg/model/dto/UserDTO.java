@@ -136,10 +136,10 @@ public class UserDTO implements Validator {
             return;
         }
 
-        if (!passwordCheck.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^*])(?!.*['\"`]).{6,}")) {
-            errors.rejectValue("password", "password.matches", "Mật Khẩu Nhập Vào Không Hợp Lệ");
-            return;
-        }
+//        if (!passwordCheck.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^*])(?!.*['\"`]).{6,}")) {
+//            errors.rejectValue("password", "password.matches", "Mật Khẩu Nhập Vào Không Hợp Lệ");
+//            return;
+//        }
 
         if (!phoneCheck.matches("^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$")){
             errors.rejectValue("phone", "phone.matches", "Số Điện Thoại Nhập Vào Không Hợp Lệ");

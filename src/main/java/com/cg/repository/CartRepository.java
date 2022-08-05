@@ -1,9 +1,7 @@
 package com.cg.repository;
 
 import com.cg.model.Cart;
-import com.cg.model.LocationRegion;
 import com.cg.model.dto.CartInfoDTO;
-import com.cg.model.dto.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

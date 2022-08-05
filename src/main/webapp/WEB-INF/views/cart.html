@@ -92,8 +92,6 @@
     page.elements.locationRegion.address = $('#address--delivery');
     page.elements.deliveryDate = $('#delivery--date');
     page.elements.cartInfoGrandTotal = $('.content--cart--money--bottom span');
-    page.elements.totalPrice = $('.total--price');
-
     page.commands.drawProvinces = ()=> {
         return $.ajax({
             "headers": {
@@ -221,6 +219,7 @@
                 let grandTotal = 0;
                 $.each(data, (i, item) => {
                     cartItem = item;
+                    cartItem.totalPrice = App.formatNumberSpace(cartItem.totalPrice);
                     cartItem.price = App.formatNumberSpace(cartItem.price);
                     grandTotal = App.formatNumberSpace(cartItem.cart.grandTotal);
                     addBlockProductByCartPage();
@@ -264,9 +263,11 @@
                 })
                 .done((data) => {
                     cartItemReduce = data.cartItem;
+                    App.formatNumberSpace(cartItemReduce.cart.grandTotal);
+                    App.formatNumberSpace(cartItemReduce.totalPrice);
                     $(`.input_${productId}`).val(reduceValue);
                     page.elements.cartInfoGrandTotal.text(`${cartItemReduce.cart.grandTotal} đ`);
-                    page.elements.totalPrice.text(`${cartItemReduce.totalPrice} đ`);
+                    $(`.total--price_${productId}`).text(`${cartItemReduce.totalPrice} đ`);
                     App.IziToast.showSuccessAlert(data.success);
                 })
                 .fail((jqXHR) => {
@@ -304,9 +305,11 @@
                 })
                 .done((data) => {
                     cartItemIncrease = data.cartItem;
+                    App.formatNumberSpace(cartItemIncrease.cart.grandTotal);
+                    App.formatNumberSpace(cartItemIncrease.totalPrice);
                     $(`.input_${productId}`).val(reduceValue);
                     page.elements.cartInfoGrandTotal.text(`${cartItemIncrease.cart.grandTotal} đ`);
-                    page.elements.totalPrice.text(`${cartItemReduce.totalPrice} đ`);
+                    $(`.total--price_${productId}`).text(`${cartItemIncrease.totalPrice} đ`);
                     App.IziToast.showSuccessAlert(data.success);
                 })
                 .fail((jqXHR) => {
@@ -328,13 +331,15 @@
     }
 
     page.commands.removeProductByCart = () => {
-        $('.cart--info--content--product a').on("click",function (){
+        $('.content--cart--product--list--first a').on("click",function (){
             let productId = $(this).data("id");
             let userId = $('.header--right a span').attr('id');
-
+            let cart = new Cart();
             cart.userId = userId;
             cart.productId = productId;
             cart.quantity = 0;
+
+            console.log(cart);
 
             $.ajax({
                 "headers": {
