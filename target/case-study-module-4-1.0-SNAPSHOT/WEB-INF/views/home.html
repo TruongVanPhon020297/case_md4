@@ -9,9 +9,10 @@
 <div class="container">
     <th:block th:replace="/layout/menu :: menu" />
     <div class="container--content">
-        <div class="content">
+        <div class="content content--product--first">
 
         </div>
+        <th:block th:replace="/layout/modal_search :: modal_search" />
     </div>
     <th:block th:replace="/layout/introduce :: introduce" />
     <th:block th:replace="/layout/footer :: footer" />
@@ -56,6 +57,7 @@
     page.elements.contentProductSearch = $('.content--product--search');
     page.elements.textResultSearch = $('.header--right--form--result--search p');
 
+
     let product = new Product();
 
     let cart = new Cart();
@@ -82,7 +84,7 @@
     }
 
     function addBlockProduct() {
-        $('.content').prepend($(tempBlockProduct(product.urlImage,product.id,product.id,product.title,product.price,product.id)));
+        $('.content--product--first').prepend($(tempBlockProduct(product.urlImage,product.id,product.id,product.title,product.price,product.id)));
     }
 
     function addBlockProductSearch() {
@@ -452,6 +454,8 @@
                     "data": JSON.stringify(keySearch)
                 })
                 .done((data) => {
+                    page.elements.textResultSearch.text("");
+                    page.elements.textResultSearch.off();
                     page.elements.contentProductSearch.html("");
                     $.each(data, (i, item) => {
                         product = item;
@@ -460,9 +464,16 @@
                             return false;
                         }
                     });
-                    page.elements.textResultSearch.text(`Tìm Kiếm Tất Cả "${keySearch}"`);
-                    page.elements.resultSearch.removeClass("hide").addClass("show");
+                    if (data.length > 4){
+                        $(".header--right--form--result--search .fa-search").removeClass("hide").addClass("showIconSearch");
+                        page.elements.textResultSearch.text(`Tìm Kiếm Tất Cả "${keySearch}"`);
+                        page.elements.resultSearch.removeClass("hide").addClass("show");
+                    }else {
+                        page.elements.resultSearch.removeClass("hide").addClass("show");
+                        $(".header--right--form--result--search .fa-search").removeClass("showIconSearch").addClass("hide");
+                    }
                     page.commands.showCartInfoByResultSearch();
+                    page.commands.showModalSearch();
                 })
                 .fail((jqXHR) => {
                     page.elements.contentProductSearch.html("");
@@ -488,6 +499,7 @@
                 product = data;
                 addBlockProductInfo();
                 page.commands.handleClickShowInfo();
+                page.elements.resultSearch.removeClass("show").addClass("hide");
                 $('.show--info--product').removeClass('hide').addClass('show');
             })
             .fail((jqXHR) => {
@@ -496,7 +508,60 @@
         })
     }
 
+    page.commands.showModalSearch = () => {
+        page.elements.textResultSearch.on('click',function () {
+            let keySearch = page.elements.inputSearch.val();
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "async" : false,
+                "type": "POST",
+                "url": page.url.doSearch,
+                "data": JSON.stringify(keySearch)
+            })
+            .done((data) => {
+                console.log(data);
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            })
+            // $('.content--product--first').addClass("hide");
+            // page.elements.resultSearch.removeClass("show").addClass("hide");
+            // $('.content--search').removeClass("hide").addClass("show");
+        })
+    }
 
+    function getVals(){
+        // Get slider values
+        let parent = this.parentNode;
+        let slides = parent.getElementsByTagName("input");
+        let slide1 = parseFloat( slides[0].value );
+        let slide2 = parseFloat( slides[1].value );
+        // Neither slider will clip the other, so make sure we determine which is larger
+        if( slide1 > slide2 ){ let tmp = slide2; slide2 = slide1; slide1 = tmp; }
+
+        let displayElement = parent.getElementsByClassName("rangeValues")[0];
+        //innerHTML property allows Javascript code to manipulate a website being displayed
+        displayElement.innerHTML = "$" + slide1 + " - $" + slide2;
+    }
+
+    window.onload = function(){
+        // Initialize Sliders
+        let sliderSections = document.getElementsByClassName("range-slider");
+        for( let x = 0; x < sliderSections.length; x++ ){
+            let sliders = sliderSections[x].getElementsByTagName("input");
+            for( let y = 0; y < sliders.length; y++ ){
+                if( sliders[y].type ==="range" ){
+                    //oninput attribute fires when the value of an <input> element is changed
+                    sliders[y].oninput = getVals;
+                    // Manually trigger event first time to display values
+                    sliders[y].oninput();
+                }
+            }
+        }
+    }
 
 </script>
 </body>

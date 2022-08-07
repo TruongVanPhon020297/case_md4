@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="modal_search">
+    <div class="content--search hide">
+        <h1 class="title--search">Kết Quả Tìm kiếm</h1>
+        <div class="slider">
+            <div class="range-slider">
+                <span class="rangeValues"></span>
+                <input value="1000" min="1000" max="10000" step="500" type="range">
+                <input value="50000" min="1000" max="10000" step="500" type="range">
+            </div>
+        </div>
+        <div class="wrapper--right">
+            <div class="wrapper--right--input">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <input type="text" placeholder="Tìm Kiếm ..." id="search">
+                <i class="fa fa-times hide" aria-hidden="true"></i>
+            </div>
+            <div class="wrapper--right--result">
+                <p>Đã Tìm Thấy 12 Mặt Hàng</p>
+            </div>
+            <div class="wrapper--right--product">
+
+            </div>
+        </div>
+    </div>
+</th:block>
+
+

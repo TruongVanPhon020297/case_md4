@@ -757,4 +757,7 @@ body .show--info--product .show--info--product--content .show--info--product--co
 .show {
   display: block;
 }
+.showIconSearch {
+  display: inline-block;
+}
 /*# sourceMappingURL=home.css.map */
