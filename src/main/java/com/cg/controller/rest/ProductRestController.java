@@ -1,5 +1,6 @@
 package com.cg.controller.rest;
 
+import com.cg.exception.DataInputException;
 import com.cg.exception.ResourceNotFoundException;
 import com.cg.model.dto.ProductDTO;
 import com.cg.service.product.ProductService;
@@ -7,10 +8,7 @@ import com.cg.util.AppUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
@@ -44,6 +42,24 @@ public class ProductRestController {
             throw new ResourceNotFoundException("Không Tìm Thấy Sản Phẩm");
         }
         return new ResponseEntity<>(productDTOOptional.get(), HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> searchProduct(@RequestBody String keySearch) {
+
+        String key = keySearch.substring(1,keySearch.length()-1);
+
+        if (key.trim().equals("")) {
+            throw new DataInputException("Vui Lòng Nhập Tên Sản Phẩm Cần Tìm");
+        }
+
+        List<ProductDTO> productDTOList = productService.findProductDTOByTitle(key);
+
+        if (productDTOList.isEmpty()) {
+            throw new DataInputException("Không Tìm Thấy Từ Khóa");
+        }
+
+        return new ResponseEntity<>(productDTOList,HttpStatus.OK);
     }
 
 }

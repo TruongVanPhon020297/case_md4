@@ -55,4 +55,9 @@ public class ProductServiceImpl implements ProductService{
     public Optional<ProductDTO> getProductDTOById(Long id) {
         return productRepository.getProductDTOById(id);
     }
+
+    @Override
+    public List<ProductDTO> findProductDTOByTitle(String keySearch) {
+        return productRepository.findProductDTOByTitle(keySearch);
+    }
 }

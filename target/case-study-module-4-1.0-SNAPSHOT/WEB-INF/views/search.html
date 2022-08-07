@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <th:block th:replace="/layout/head :: head" />
+</head>
+<body>
+<div class="container">
+    <th:block th:replace="/layout/menu :: menu" />
+    <div class="content content--search">
+        <h1 class="title--search">Kết Quả Tìm kiếm</h1>
+        <div class="slider">
+            <div class="range-slider">
+                <span class="rangeValues"></span>
+                <input value="1000" min="1000" max="10000" step="500" type="range">
+                <input value="50000" min="1000" max="10000" step="500" type="range">
+            </div>
+        </div>
+        <div class="wrapper--right">
+            <div class="wrapper--right--input">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <input type="text" placeholder="Tìm Kiếm ..." id="search">
+                <i class="fa fa-times hide" aria-hidden="true"></i>
+            </div>
+            <div class="wrapper--right--result">
+                <p>Đã Tìm Thấy 12 Mặt Hàng</p>
+            </div>
+            <div class="wrapper--right--product">
+                <div class="content--product">
+                    <div class="content--product--top">
+                        <img src="assets/img/3d1aca28-1395-401c-a96e-223811deec4b.jpg" alt="" width="200" height="200">
+                        <h4>Xem Ngay</h4>
+                    </div>
+                    <div class="content--product--bottom">
+                        <p>Tôi Là Sản Phẩm</p>
+                        <p></p>
+                        <p>300.000đ</p>
+                        <p class="add--cart">Thêm Vào Giỏ Hàng</p>
+                    </div>
+                </div>
+                <div class="content--product">
+                    <div class="content--product--top">
+                        <img src="assets/img/0d263b92-ba68-4a7f-86cc-819ed732e351.jpg" alt="" width="200" height="200">
+                        <h4>Xem Ngay</h4>
+                    </div>
+                    <div class="content--product--bottom">
+                        <p>Tôi Là Sản Phẩm</p>
+                        <p></p>
+                        <p>300.000đ</p>
+                        <p class="add--cart">Thêm Vào Giỏ Hàng</p>
+                    </div>
+                </div>
+                <div class="content--product">
+                    <div class="content--product--top">
+                        <img src="assets/img/0d263b92-ba68-4a7f-86cc-819ed732e351.jpg" alt="" width="200" height="200">
+                        <h4>Xem Ngay</h4>
+                    </div>
+                    <div class="content--product--bottom">
+                        <p>Tôi Là Sản Phẩm</p>
+                        <p></p>
+                        <p>300.000đ</p>
+                        <p class="add--cart">Thêm Vào Giỏ Hàng</p>
+                    </div>
+                </div>
+                <div class="content--product">
+                    <div class="content--product--top">
+                        <img src="assets/img/0d263b92-ba68-4a7f-86cc-819ed732e351.jpg" alt="" width="200" height="200">
+                        <h4>Xem Ngay</h4>
+                    </div>
+                    <div class="content--product--bottom">
+                        <p>Tôi Là Sản Phẩm</p>
+                        <p></p>
+                        <p>300.000đ</p>
+                        <p class="add--cart">Thêm Vào Giỏ Hàng</p>
+                    </div>
+                </div>
+                <div class="content--product">
+                    <div class="content--product--top">
+                        <img src="assets/img/0d263b92-ba68-4a7f-86cc-819ed732e351.jpg" alt="" width="200" height="200">
+                        <h4>Xem Ngay</h4>
+                    </div>
+                    <div class="content--product--bottom">
+                        <p>Tôi Là Sản Phẩm</p>
+                        <p></p>
+                        <p>300.000đ</p>
+                        <p class="add--cart">Thêm Vào Giỏ Hàng</p>
+                    </div>
+                </div>
+                <div class="content--product">
+                    <div class="content--product--top">
+                        <img src="assets/img/0d263b92-ba68-4a7f-86cc-819ed732e351.jpg" alt="" width="200" height="200">
+                        <h4>Xem Ngay</h4>
+                    </div>
+                    <div class="content--product--bottom">
+                        <p>Tôi Là Sản Phẩm</p>
+                        <p></p>
+                        <p>300.000đ</p>
+                        <p class="add--cart">Thêm Vào Giỏ Hàng</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="/layout/introduce :: introduce" />
+    <th:block th:replace="/layout/footer :: footer" />
+</div>
+<th:block th:replace="/layout/temp_block_product :: temp_block_product" />
+<th:block th:replace="/layout/temp_block_product_info :: temp_block_product_info" />
+<th:block th:replace="/layout/cart_modal :: cart_modal" />
+<th:block th:replace="/layout/product_info :: product_info" />
+<th:block th:replace="/layout/tem_block_product_cart :: temp_block_product_cart" />
+<th:block th:replace="/layout/script :: script" />
+<script>
+    function getVals(){
+        // Get slider values
+        let parent = this.parentNode;
+        let slides = parent.getElementsByTagName("input");
+        let slide1 = parseFloat( slides[0].value );
+        let slide2 = parseFloat( slides[1].value );
+        // Neither slider will clip the other, so make sure we determine which is larger
+        if( slide1 > slide2 ){ let tmp = slide2; slide2 = slide1; slide1 = tmp; }
+
+        let displayElement = parent.getElementsByClassName("rangeValues")[0];
+        //innerHTML property allows Javascript code to manipulate a website being displayed
+        displayElement.innerHTML = "$" + slide1 + " - $" + slide2;
+    }
+
+    window.onload = function(){
+        // Initialize Sliders
+        let sliderSections = document.getElementsByClassName("range-slider");
+        for( let x = 0; x < sliderSections.length; x++ ){
+            let sliders = sliderSections[x].getElementsByTagName("input");
+            for( let y = 0; y < sliders.length; y++ ){
+                if( sliders[y].type ==="range" ){
+                    //oninput attribute fires when the value of an <input> element is changed
+                    sliders[y].oninput = getVals;
+                    // Manually trigger event first time to display values
+                    sliders[y].oninput();
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

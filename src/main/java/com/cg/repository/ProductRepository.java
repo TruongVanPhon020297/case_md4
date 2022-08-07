@@ -34,4 +34,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE p.id = :id"
     )
     Optional<ProductDTO> getProductDTOById(@Param("id") Long id);
+
+    @Query("SELECT new com.cg.model.dto.ProductDTO (" +
+            "p.id, " +
+            "p.title, " +
+            "p.price, " +
+            "p.quantity, " +
+            "p.urlImage, " +
+            "p.category" +
+            ") " +
+            "FROM Product AS p " +
+            "WHERE p.title LIKE %?1% " +
+            "ORDER BY p.title DESC"
+    )
+    List<ProductDTO> findProductDTOByTitle(String keySearch);
 }

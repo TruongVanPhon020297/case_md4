@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface ProductService extends IGeneralService<Product> {
     List<ProductDTO> findAllProductDTO();
     Optional<ProductDTO> getProductDTOById(Long id);
+    List<ProductDTO> findProductDTOByTitle(String keySearch);
 }

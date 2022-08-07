@@ -50,6 +50,7 @@ public class HomeController {
         modelAndView.addObject("userDTO", getUserDTO());
         return modelAndView;
     }
+
     @GetMapping("login")
     public String showLoginPage() {
 
@@ -59,17 +60,26 @@ public class HomeController {
         }
         return "/login";
     }
+
     @GetMapping("register")
     public ModelAndView showRegisterPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/register");
         return modelAndView;
     }
+
     @GetMapping("cart")
     public ModelAndView showCartPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/cart");
         modelAndView.addObject("userDTO", getUserDTO());
+        return modelAndView;
+    }
+
+    @GetMapping("search")
+    public ModelAndView showSearchPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/search");
         return modelAndView;
     }
 }

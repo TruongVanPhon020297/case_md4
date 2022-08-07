@@ -8,8 +8,10 @@
 <body>
 <div class="container">
     <th:block th:replace="/layout/menu :: menu" />
-    <div class="content">
+    <div class="container--content">
+        <div class="content">
 
+        </div>
     </div>
     <th:block th:replace="/layout/introduce :: introduce" />
     <th:block th:replace="/layout/footer :: footer" />
@@ -19,6 +21,7 @@
 <th:block th:replace="/layout/cart_modal :: cart_modal" />
 <th:block th:replace="/layout/product_info :: product_info" />
 <th:block th:replace="/layout/tem_block_product_cart :: temp_block_product_cart" />
+<th:block th:replace="/layout/temp_block_product_search :: temp_block_product_search" />
 <th:block th:replace="/layout/script :: script" />
 <script>
     let page = {
@@ -28,7 +31,8 @@
             getAllCartItem : App.BASER_URL + "carts/",
             doReduceCart : App.BASER_URL + "carts/reduce",
             doIncreaseCart : App.BASER_URL + "carts/increase",
-            doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item"
+            doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item",
+            doSearch : App.BASER_URL + "products/search"
         },
         elements : {
             locationRegion : {}
@@ -47,6 +51,10 @@
     page.elements.cartInfoGrandTotal = $('.cart--info--total span');
     page.dialogs.elements.modalCart = $('.cart');
     page.dialogs.elements.modalProductInfo = $('.show--info--product');
+    page.elements.inputSearch = $(".header--right--form--search");
+    page.elements.resultSearch = $('.header--right--form--result');
+    page.elements.contentProductSearch = $('.content--product--search');
+    page.elements.textResultSearch = $('.header--right--form--result--search p');
 
     let product = new Product();
 
@@ -62,6 +70,8 @@
 
     let tempBlockProductCart = $.validator.format($.trim($('#tempBlockProductCart').val().toString()));
 
+    let tempBlockProductSearch = $.validator.format($.trim($('#tempBlockProductSearch').val().toString()));
+
     function addBlockProductInfo() {
         $('.show--info--product').html("");
         $('.show--info--product').prepend($(tempBlockProductInfo(product.urlImage,product.title,product.price,product.id)));
@@ -73,6 +83,10 @@
 
     function addBlockProduct() {
         $('.content').prepend($(tempBlockProduct(product.urlImage,product.id,product.id,product.title,product.price,product.id)));
+    }
+
+    function addBlockProductSearch() {
+        $('.content--product--search').prepend($(tempBlockProductSearch(product.id,product.urlImage,product.title)));
     }
 
     page.loadData.getAllProduct = () =>{
@@ -92,6 +106,7 @@
                 addBlockProduct();
             });
             page.commands.handleClickShowInfo();
+            page.commands.doSearch();
         })
         .fail((jqXHR) => {
             console.log(jqXHR)
@@ -118,7 +133,6 @@
             .fail((jqXHR) => {
 
             })
-
         })
     }
 
@@ -420,6 +434,69 @@
 
         })
     }
+
+    page.commands.doSearch = () => {
+        page.elements.inputSearch.on("input",function(){
+            let keySearch = page.elements.inputSearch.val();
+            if(keySearch.trim() === "") {
+                page.elements.resultSearch.removeClass("show").addClass("hide");
+            }else{
+                $.ajax({
+                    "headers": {
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    },
+                    "async" : false,
+                    "type": "POST",
+                    "url": page.url.doSearch,
+                    "data": JSON.stringify(keySearch)
+                })
+                .done((data) => {
+                    page.elements.contentProductSearch.html("");
+                    $.each(data, (i, item) => {
+                        product = item;
+                        addBlockProductSearch();
+                        if (i > 2) {
+                            return false;
+                        }
+                    });
+                    page.elements.textResultSearch.text(`Tìm Kiếm Tất Cả "${keySearch}"`);
+                    page.elements.resultSearch.removeClass("hide").addClass("show");
+                    page.commands.showCartInfoByResultSearch();
+                })
+                .fail((jqXHR) => {
+                    page.elements.contentProductSearch.html("");
+                    page.elements.textResultSearch.text(`${jqXHR.responseJSON.message} "${keySearch}"`);
+                })
+            }
+        })
+    }
+
+    page.commands.showCartInfoByResultSearch = () => {
+        $('.header--right--form--result--content').on('click',function () {
+            let productId = $(this).data("id");
+            console.log(productId);
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "GET",
+                "url": page.url.getAllProduct + productId,
+            })
+            .done((data) => {
+                product = data;
+                addBlockProductInfo();
+                page.commands.handleClickShowInfo();
+                $('.show--info--product').removeClass('hide').addClass('show');
+            })
+            .fail((jqXHR) => {
+
+            })
+        })
+    }
+
+
 
 </script>
 </body>
