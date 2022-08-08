@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,5 +60,10 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductDTO> findProductDTOByTitle(String keySearch) {
         return productRepository.findProductDTOByTitle(keySearch);
+    }
+
+    @Override
+    public List<ProductDTO> findProductDTOByRange(String keySearch, BigDecimal valueUp, BigDecimal valueDown) {
+        return productRepository.findProductDTOByRange(keySearch,valueUp,valueDown);
     }
 }

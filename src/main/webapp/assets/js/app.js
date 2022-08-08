@@ -135,3 +135,10 @@ class Order {
         this.deliveryDate = deliveryDate;
     }
 }
+class Search {
+    constructor(valueUp,valueDown,keySearch) {
+        this.valueUp = valueUp;
+        this.valueDown = valueDown;
+        this.keySearch = keySearch;
+    }
+}

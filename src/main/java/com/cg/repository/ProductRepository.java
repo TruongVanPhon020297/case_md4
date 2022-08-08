@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,4 +49,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "ORDER BY p.title DESC"
     )
     List<ProductDTO> findProductDTOByTitle(String keySearch);
+
+    @Query("SELECT new com.cg.model.dto.ProductDTO (" +
+            "p.id, " +
+            "p.title, " +
+            "p.price, " +
+            "p.quantity, " +
+            "p.urlImage, " +
+            "p.category" +
+            ") " +
+            "FROM Product AS p " +
+            "WHERE p.title LIKE %?1% " +
+            "AND p.price BETWEEN ?2 AND ?3"
+    )
+    List<ProductDTO> findProductDTOByRange(String keySearch, BigDecimal valueUp, BigDecimal valueDown);
 }

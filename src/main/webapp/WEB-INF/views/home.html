@@ -33,7 +33,8 @@
             doReduceCart : App.BASER_URL + "carts/reduce",
             doIncreaseCart : App.BASER_URL + "carts/increase",
             doRemoveCartItem : App.BASER_URL + "carts/remove-cart-item",
-            doSearch : App.BASER_URL + "products/search"
+            doSearch : App.BASER_URL + "products/search",
+            doSearchRange : App.BASER_URL + "products/search-range"
         },
         elements : {
             locationRegion : {}
@@ -641,6 +642,104 @@
                 $('.wrapper--right--result p').text(`${jqXHR.responseJSON.message} "${keySearch}"`);
             })
         }
+    })
+
+    $('.rangeUp').on('input',function (){
+        let valueUp = $(this).val();
+        let valueDown = $('.rangeDown').val();
+        let keySearch = $('#search').val();
+        let search = new Search();
+        search.valueUp = valueUp;
+        search.valueDown = valueDown;
+        search.keySearch = keySearch;
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "async": false,
+            "type": "POST",
+            "url": page.url.doSearchRange,
+            "data": JSON.stringify(search)
+        })
+        .done((data) => {
+            $('.wrapper--right--product').html("");
+            $.each(data, (i, item) => {
+                product = item;
+                let str = `<div class="content--product">
+                                <div class="content--product--top">
+                                    <img src="assets/img/${product.urlImage}" alt="" width="200" height="200">
+                                    <h4 id ="btnShowInfoProduct_${product.id}" data-id = "${product.id}">Xem Ngay</h4>
+                                </div>
+                                <div class="content--product--bottom">
+                                    <p>${product.title}</p>
+                                    <p></p>
+                                    <p>${product.price} VNĐ</p>
+                                    <p class="add--cart" data-id = "${product.id}">Thêm Vào Giỏ Hàng</p>
+                                </div>
+                            </div>`;
+                $('.wrapper--right--product').prepend(str);
+            });
+            $('.wrapper--right--result p').text(`Đã Tìm Thấy ${data.length} Mặt Hàng`);
+            page.loadData.getProduct();
+            page.commands.doAddCart();
+            page.commands.doAddCartProductInfo();
+            page.commands.reduce();
+            page.commands.increase();
+        })
+        .fail((jqXHR) => {
+            $('.wrapper--right--product').html("");
+            $('.wrapper--right--result p').text(`${jqXHR.responseJSON.message}`);
+        })
+    })
+
+    $('.rangeDown').on('input',function (){
+        let valueUp = $('.rangeUp').val();
+        let valueDown = $(this).val();
+        let keySearch = $('#search').val();
+        let search = new Search();
+        search.valueUp = valueUp;
+        search.valueDown = valueDown;
+        search.keySearch = keySearch;
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "async": false,
+            "type": "POST",
+            "url": page.url.doSearchRange,
+            "data": JSON.stringify(search)
+        })
+        .done((data) => {
+            $('.wrapper--right--product').html("");
+            $.each(data, (i, item) => {
+                product = item;
+                let str = `<div class="content--product">
+                            <div class="content--product--top">
+                                <img src="assets/img/${product.urlImage}" alt="" width="200" height="200">
+                                <h4 id ="btnShowInfoProduct_${product.id}" data-id = "${product.id}">Xem Ngay</h4>
+                            </div>
+                            <div class="content--product--bottom">
+                                <p>${product.title}</p>
+                                <p></p>
+                                <p>${product.price} VNĐ</p>
+                                <p class="add--cart" data-id = "${product.id}">Thêm Vào Giỏ Hàng</p>
+                            </div>
+                        </div>`;
+                $('.wrapper--right--product').prepend(str);
+            });
+            $('.wrapper--right--result p').text(`Đã Tìm Thấy ${data.length} Mặt Hàng`);
+            page.loadData.getProduct();
+            page.commands.doAddCart();
+            page.commands.doAddCartProductInfo();
+            page.commands.reduce();
+            page.commands.increase();
+        })
+        .fail((jqXHR) => {
+            $('.wrapper--right--product').html("");
+            $('.wrapper--right--result p').text(`${jqXHR.responseJSON.message}`);
+        })
     })
 
 </script>
