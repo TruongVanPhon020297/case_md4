@@ -522,14 +522,38 @@
                 "data": JSON.stringify(keySearch)
             })
             .done((data) => {
-                console.log(data);
+                $.each(data, (i, item) => {
+                    product = item;
+                    let str = `<div class="content--product">
+                                    <div class="content--product--top">
+                                        <img src="assets/img/${product.urlImage}" alt="" width="200" height="200">
+                                        <h4 id ="btnShowInfoProduct_${product.id}" data-id = "${product.id}">Xem Ngay</h4>
+                                    </div>
+                                    <div class="content--product--bottom">
+                                        <p>${product.title}</p>
+                                        <p></p>
+                                        <p>${product.price} VNĐ</p>
+                                        <p class="add--cart" data-id = "${product.id}">Thêm Vào Giỏ Hàng</p>
+                                    </div>
+                                </div>`;
+                    $('.wrapper--right--product').prepend(str);
+
+                });
+                $('.content--product--first').addClass("hide");
+                page.elements.resultSearch.removeClass("show").addClass("hide");
+                $('#search').val(keySearch);
+                $('.wrapper--right--result p').text(`Đã Tìm Thấy ${data.length} Mặt Hàng`);
+                $('.wrapper--right--input .fa-times').removeClass("hide").addClass("show");
+                $('.content--search').removeClass("hide").addClass("show");
+                page.loadData.getProduct();
+                page.commands.doAddCart();
+                page.commands.doAddCartProductInfo();
+                page.commands.reduce();
+                page.commands.increase();
             })
             .fail((jqXHR) => {
                 console.log(jqXHR);
             })
-            // $('.content--product--first').addClass("hide");
-            // page.elements.resultSearch.removeClass("show").addClass("hide");
-            // $('.content--search').removeClass("hide").addClass("show");
         })
     }
 
@@ -562,6 +586,62 @@
             }
         }
     }
+
+    $('.wrapper--right--input .fa-times').on("click",function (){
+        $(this).removeClass("show").addClass("hide");
+        $('#search').val("");
+        $('.wrapper--right--result p').text("");
+        $('.wrapper--right--product').html("");
+    })
+
+    $('#search').on('input',function (){
+        $('.wrapper--right--input .fa-times').removeClass("hide").addClass("show");
+        let keySearch = $('#search').val();
+        if(keySearch.trim() === "") {
+            $('.wrapper--right--product').html("");
+            $('.wrapper--right--result p').text("");
+        }else {
+            $.ajax({
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "async": false,
+                "type": "POST",
+                "url": page.url.doSearch,
+                "data": JSON.stringify(keySearch)
+            })
+            .done((data) => {
+                $('.wrapper--right--product').html("");
+                $.each(data, (i, item) => {
+                    product = item;
+                    let str = `<div class="content--product">
+                                <div class="content--product--top">
+                                    <img src="assets/img/${product.urlImage}" alt="" width="200" height="200">
+                                    <h4 id ="btnShowInfoProduct_${product.id}" data-id = "${product.id}">Xem Ngay</h4>
+                                </div>
+                                <div class="content--product--bottom">
+                                    <p>${product.title}</p>
+                                    <p></p>
+                                    <p>${product.price} VNĐ</p>
+                                    <p class="add--cart" data-id = "${product.id}">Thêm Vào Giỏ Hàng</p>
+                                </div>
+                            </div>`;
+                    $('.wrapper--right--product').prepend(str);
+                });
+                $('.wrapper--right--result p').text(`Đã Tìm Thấy ${data.length} Mặt Hàng`);
+                page.loadData.getProduct();
+                page.commands.doAddCart();
+                page.commands.doAddCartProductInfo();
+                page.commands.reduce();
+                page.commands.increase();
+            })
+            .fail((jqXHR) => {
+                $('.wrapper--right--product').html("");
+                $('.wrapper--right--result p').text(`${jqXHR.responseJSON.message} "${keySearch}"`);
+            })
+        }
+    })
 
 </script>
 </body>
