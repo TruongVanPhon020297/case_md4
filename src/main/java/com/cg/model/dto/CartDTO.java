@@ -63,11 +63,5 @@ public class CartDTO implements Validator {
             errors.rejectValue("quantity", "quantity.matches", "Số Lượng Sản Phẩm Không Hợp Lệ");
             return;
         }
-
-        if (Integer.parseInt(quantityCheck) == 0 ) {
-            errors.rejectValue("quantity", "quantity.zero", "Số Lượng Sản Phẩm Phải Lớn Hơn 0");
-            return;
-        }
-
     }
 }
