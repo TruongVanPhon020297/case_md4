@@ -271,7 +271,7 @@
                 })
                 .done((data) => {
                     cartItemReduce = data.cartItem;
-                    $(`.input_${productId}`).val(reduceValue);
+                    $(`.input_${productId}`).val(cartItemReduce.quantity);
                     page.elements.cartInfoGrandTotal.text(`${cartItemReduce.cart.grandTotal} đ`);
                     App.IziToast.showSuccessAlert(data.success);
                 })
@@ -279,7 +279,14 @@
                     if (jqXHR.status === 401)  {
                         App.IziToast.showErrorAlert("Vui Lòng Đăng Nhập Để Xem Giỏ Hàng Của Bạn");
                     }else {
-
+                        if(jqXHR.responseJSON.message){
+                            let msg = jqXHR.responseJSON.message;
+                            App.IziToast.showErrorAlert(msg);
+                        }else if(jqXHR.responseJSON){
+                            $.each(jqXHR.responseJSON,(key,item) =>{
+                                App.IziToast.showErrorAlert(item);
+                            })
+                        }
                     }
                 })
             }
@@ -309,7 +316,7 @@
                 })
                 .done((data) => {
                     cartItemIncrease = data.cartItem;
-                    $(`.input_${productId}`).val(reduceValue);
+                    $(`.input_${productId}`).val(cartItemIncrease.quantity);
                     page.elements.cartInfoGrandTotal.text(`${cartItemIncrease.cart.grandTotal} đ`);
                     App.IziToast.showSuccessAlert(data.success);
                 })

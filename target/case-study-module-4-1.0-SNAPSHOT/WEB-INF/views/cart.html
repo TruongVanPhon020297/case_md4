@@ -268,7 +268,7 @@
                     cartItemReduce = data.cartItem;
                     App.formatNumberSpace(cartItemReduce.cart.grandTotal);
                     App.formatNumberSpace(cartItemReduce.totalPrice);
-                    $(`.input_${productId}`).val(reduceValue);
+                    $(`.input_${productId}`).val(cartItemReduce.quantity);
                     page.elements.cartInfoGrandTotal.text(`${cartItemReduce.cart.grandTotal} đ`);
                     $(`.total--price_${productId}`).text(`${cartItemReduce.totalPrice} đ`);
                     App.IziToast.showSuccessAlert(data.success);
@@ -310,7 +310,7 @@
                     cartItemIncrease = data.cartItem;
                     App.formatNumberSpace(cartItemIncrease.cart.grandTotal);
                     App.formatNumberSpace(cartItemIncrease.totalPrice);
-                    $(`.input_${productId}`).val(reduceValue);
+                    $(`.input_${productId}`).val(cartItemIncrease.quantity);
                     page.elements.cartInfoGrandTotal.text(`${cartItemIncrease.cart.grandTotal} đ`);
                     $(`.total--price_${productId}`).text(`${cartItemIncrease.totalPrice} đ`);
                     App.IziToast.showSuccessAlert(data.success);
